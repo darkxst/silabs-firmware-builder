@@ -7,6 +7,8 @@
     },
     "ncp-uart-hw": {
         "configuration": {
+            "EMBER_APS_UNICAST_MESSAGE_COUNT":32,
+            "EMBER_PACKET_BUFFER_COUNT":255,
             "SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE":"uartFlowControlSoftware"
         }
     },
