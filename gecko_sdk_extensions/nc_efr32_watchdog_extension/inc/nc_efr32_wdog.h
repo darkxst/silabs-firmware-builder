@@ -19,8 +19,7 @@
 #include "em_cmu.h"
 #include "em_wdog.h"
 #include "em_rmu.h"
-#include "sli_cpc_timer.h"
 #include "sl_component_catalog.h"
 
 void nc_enable_watchdog(void);
-void nc_periodic_timer(sli_cpc_timer_handle_t *handle, void *data);
+void nc_poke_watchdog(void);

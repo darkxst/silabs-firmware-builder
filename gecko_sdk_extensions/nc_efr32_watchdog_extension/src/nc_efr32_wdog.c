@@ -83,7 +83,7 @@ void nc_enable_watchdog(void)
 }
 
 
-void nc_poke_watchdog()
+void nc_poke_watchdog(void)
 {
   CORE_DECLARE_IRQ_STATE;
   CORE_ENTER_ATOMIC();
