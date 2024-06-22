@@ -1,0 +1,30 @@
+name: MGM240P Zigbee
+device: MGM240PB32VNA
+base_project: src/ncp-uart-hw
+filename: "{manifest_name}_{ezsp_version}"
+
+gbl:
+  fw_type: ncp-uart-hw
+  dynamic: ["ezsp_version"]
+  baudrate: 115200
+
+configuration:
+  SL_IOSTREAM_USART_VCOM_BAUDRATE: 115200
+  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: uartFlowControlSoftware
+
+c_defines:
+  SL_IOSTREAM_USART_VCOM_PERIPHERAL: USART0
+  SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO: 0
+
+  SL_IOSTREAM_USART_VCOM_TX_PORT: gpioPortA
+  SL_IOSTREAM_USART_VCOM_TX_PIN:  5
+
+  SL_IOSTREAM_USART_VCOM_RX_PORT: gpioPortA
+  SL_IOSTREAM_USART_VCOM_RX_PIN:  6
+
+  SL_IOSTREAM_USART_VCOM_CTS_PORT: 0
+  SL_IOSTREAM_USART_VCOM_CTS_PIN:  0
+
+  SL_IOSTREAM_USART_VCOM_RTS_PORT: 0
+  SL_IOSTREAM_USART_VCOM_RTS_PIN:  0
+

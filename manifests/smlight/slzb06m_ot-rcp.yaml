@@ -1,0 +1,31 @@
+name: SLZB-06M OpenThread RCP
+device: EFR32MG21A020F768IM32
+base_project: src/ot-rcp
+filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}"
+
+gbl:
+  fw_type: ot-rcp
+  dynamic: ["ot_rcp_version"]
+  baudrate: 460800
+
+configuration:
+  SL_DEVICE_INIT_HFXO_CTUNE: 80
+  SL_UARTDRV_USART_VCOM_BAUDRATE: 460800
+  SL_UARTDRV_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
+
+c_defines:
+  SL_UARTDRV_USART_VCOM_PERIPHERAL: USART0
+  SL_UARTDRV_USART_VCOM_PERIPHERAL_NO: 0
+
+  SL_UARTDRV_USART_VCOM_TX_PORT: gpioPortA
+  SL_UARTDRV_USART_VCOM_TX_PIN:  6
+
+  SL_UARTDRV_USART_VCOM_RX_PORT: gpioPortA
+  SL_UARTDRV_USART_VCOM_RX_PIN:  5
+
+  SL_UARTDRV_USART_VCOM_CTS_PORT: 0
+  SL_UARTDRV_USART_VCOM_CTS_PIN:  0
+
+  SL_UARTDRV_USART_VCOM_RTS_PORT: 0
+  SL_UARTDRV_USART_VCOM_RTS_PIN:  0
+

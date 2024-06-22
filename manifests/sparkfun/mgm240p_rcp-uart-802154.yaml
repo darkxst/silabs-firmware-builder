@@ -1,0 +1,32 @@
+name: MGM240P Multi-PAN
+device: MGM240PB32VNA
+base_project: src/rcp-uart-802154
+filename: "{manifest_name}_gsdk_{sdk_version}"
+
+gbl:
+  fw_type: rcp-uart-802154
+  dynamic: ["ezsp_version", "ot_rcp_version", "cpc_version"]
+  baudrate: 460800
+
+configuration:
+  SL_CPC_DRV_UART_VCOM_BAUDRATE: 460800
+  SL_CPC_DRV_UART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
+
+c_defines:
+  CPC_SECONDARY_APP_VERSION_SUFFIX: 'template:"-{git_repo_hash}"'
+
+  SL_CPC_DRV_UART_VCOM_PERIPHERAL: USART0
+  SL_CPC_DRV_UART_VCOM_PERIPHERAL_NO: 0
+
+  SL_CPC_DRV_UART_VCOM_TX_PORT: gpioPortA
+  SL_CPC_DRV_UART_VCOM_TX_PIN:  5
+
+  SL_CPC_DRV_UART_VCOM_RX_PORT: gpioPortA
+  SL_CPC_DRV_UART_VCOM_RX_PIN:  6
+
+  SL_CPC_DRV_UART_VCOM_CTS_PORT: 0
+  SL_CPC_DRV_UART_VCOM_CTS_PIN:  0
+
+  SL_CPC_DRV_UART_VCOM_RTS_PORT: 0
+  SL_CPC_DRV_UART_VCOM_RTS_PIN:  0
+
