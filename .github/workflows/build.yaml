@@ -112,7 +112,7 @@ jobs:
       - uses: actions/checkout@v4.1.4
       - id: set-matrix
         run: |
-          echo "matrix=$(find manifests -type f \( -name "*.yaml" -o -name "*.yml" \) -print | sort | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix=$(find manifests -type f \( -name "*.yaml" -o -name "*.yml" \) -not -path "*/nabucasa/*" -print | sort | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   build-firmwares:
     name: Firmware builder
