@@ -1,7 +1,7 @@
 name: MGM240P OpenThread RCP
 device: MGM240PB32VNA
 base_project: src/ot-rcp
-filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}"
+filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{baudrate}"
 
 gbl:
   fw_type: ot-rcp

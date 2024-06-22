@@ -1,7 +1,7 @@
 name: ZB-GW04-1v1 Multi-PAN
 device: EFR32MG21A020F768IM32
 base_project: src/rcp-uart-802154
-filename: "{manifest_name}_gsdk_{sdk_version}"
+filename: "{manifest_name}_gsdk_{sdk_version}_{baudrate}"
 
 gbl:
   fw_type: rcp-uart-802154

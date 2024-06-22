@@ -1,7 +1,7 @@
 name: MGM240P Zigbee
 device: MGM240PB32VNA
 base_project: src/ncp-uart-hw
-filename: "{manifest_name}_{ezsp_version}"
+filename: "{manifest_name}_{ezsp_version}_{baudrate}"
 
 gbl:
   fw_type: ncp-uart-hw

@@ -1,7 +1,7 @@
 name: MGM240P Multi-PAN
 device: MGM240PB32VNA
 base_project: src/rcp-uart-802154
-filename: "{manifest_name}_gsdk_{sdk_version}"
+filename: "{manifest_name}_gsdk_{sdk_version}_{baudrate}"
 
 gbl:
   fw_type: rcp-uart-802154

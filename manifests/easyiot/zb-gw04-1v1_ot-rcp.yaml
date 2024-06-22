@@ -1,7 +1,7 @@
 name: ZB-GW04-1v1 OpenThread RCP
 device: EFR32MG21A020F768IM32
 base_project: src/ot-rcp
-filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}"
+filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{baudrate}"
 
 gbl:
   fw_type: ot-rcp
