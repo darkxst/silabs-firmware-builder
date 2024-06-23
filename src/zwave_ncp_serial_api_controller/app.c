@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "Assert.h"
+#include <assert.h>
 #include "SyncEvent.h"
 #ifdef ZW_CONTROLLER
 #include "ZW_controller_api.h"
@@ -16,29 +16,21 @@
 #include "ZW_system_startup_api.h"
 /* Include app header file - containing version and */
 /* SerialAPI functionality support definitions */
-#ifdef ZW_SECURITY_PROTOCOL
-#include "ZW_security_api.h"
-#include "ZW_TransportSecProtocol.h"
-#endif
 #include "DebugPrintConfig.h"
 // SerialAPI uses SWO for debug output.
 // For example SWO Terminal in  Studio commander can be used to get the output.
 //#define DEBUGPRINT
 #include "DebugPrint.h"
 #include "app_node_info.h"
-#include "virtual_slave_node_info.h"
 #include "serialapi_file.h"
 #include "cmd_handlers.h"
 #include "cmds_management.h"
 #include "ZAF_Common_interface.h"
 #include "utils.h"
-#include "zpal_watchdog.h"
 #include "app_hw.h"
 #include "SerialAPI_hw.h"
-#include "board_indicator.h"
 #include "zaf_event_distributor_ncp.h"
 #include "zpal_misc.h"
-#include "zw_build_no.h"
 #include "zaf_protocol_config.h"
 #ifdef DEBUGPRINT
 #include "ZAF_PrintAppInfo.h"
@@ -54,16 +46,7 @@
 #define TX_POWER_LR_20_DBM    200
 #define TX_POWER_LR_14_DBM    140
 
-#ifdef JP_DK
-/* Define RSSI threshold so JP can be tested in DK */
-#define JP_DK_RSSI_THRESHOLD 52
-#endif
-
-#ifdef ZW_SECURITY_PROTOCOL
-#define REQUESTED_SECURITY_KEYS   ( SECURITY_KEY_S0_BIT | SECURITY_KEY_S2_UNAUTHENTICATED_BIT | SECURITY_KEY_S2_AUTHENTICATED_BIT | SECURITY_KEY_S2_ACCESS_BIT)
-#else
 #define REQUESTED_SECURITY_KEYS   0
-#endif  /* ZW_SECURITY_PROTOCOL */
 
 /* Accept all incoming command classes, regardless of NIF contents. */
 #define ACCEPT_ALL_CMD_CLASSES
@@ -131,24 +114,7 @@ extern uint8_t bWatchdogStarted;
 #endif
 
 /* Last system wakeup reason - is set in ApplicationInit */
-EResetReason_t g_eApplResetReason;
-
-#ifdef APPL_PROD_TEST
-#define PRODTEST_NR_1 1
-#define PRODTEST_NR_2 2
-#define PRODTEST_NR_3 3
-#define PRODTEST_NR_4 4
-#define PRODTEST_NR_5 5
-#define PRODTEST_NR_6 6
-#define PRODTEST_NR_7 7
-
-#define POWERON_MAGIC_VALUE 0x4242
-extern uint8_t bProdtestState;
-/* Production test pin definition */
-static uint8_t testRun;
-#define SET_PRODUCTIONTEST_PIN PIN_IN(P21, 1)
-#define IN_PRODUCTIONTEST (!PIN_GET(P21))
-#endif /* APPL_PROD_TEST */
+zpal_reset_reason_t g_eApplResetReason;
 
 zpal_pm_handle_t radio_power_lock;
 zpal_pm_handle_t io_power_lock;
@@ -166,10 +132,6 @@ void ApplicationCommandHandler(void *pSubscriberContext, SZwaveReceivePackage* p
 
 void ApplicationNodeUpdate(uint8_t bStatus, uint16_t nodeID, uint8_t *pCmd, uint8_t bLen);
 
-#if SUPPORT_ZW_SET_PROMISCUOUS_MODE
-static void SetPromiscuousMode(uint8_t mode);
-#endif
-
 #if SUPPORT_ZW_REMOVE_FAILED_NODE_ID
 extern void ZCB_ComplHandler_ZW_RemoveFailedNodeID(uint8_t bStatus);
 #endif
@@ -186,47 +148,6 @@ extern void ZCB_ComplHandler_ZW_SetSlaveLearnMode(uint8_t bStatus, uint8_t orgID
 extern uint8_t SetRFReceiveMode(uint8_t mode);
 #endif
 
-#ifdef UZB
-
-#if 1 // 0 - test UZB on ZDP03A, 1 - normal mode (UZB on UZB :)
-#define LEDxPort P0
-#define LEDxSHADOW P0Shadow
-#define LEDxSHADOWDIR P0ShadowDIR
-#define LEDxDIR P0DIR
-#define LEDxDIR_PAGE P0DIR_PAGE
-#define LEDx 4
-#else // 0 - test UZB on ZDP03A, 1 - normal mode (UZB on UZB :)
-#define LEDxPort P0
-#define LEDxSHADOW P0Shadow
-#define LEDxSHADOWDIR P0ShadowDIR
-#define LEDxDIR P0DIR
-#define LEDxDIR_PAGE P0DIR_PAGE
-#define LEDx 7
-#endif // 0 - test UZB on ZDP03A, 1 - normal mode (UZB on UZB :)
-
-void /*RET  Nothing                  */
-set_state_and_notify(uint8_t st)
-{
-
-  if (state != st)
-  {
-    xTaskNotify(g_AppTaskHandle,
-                1<<EAPPLICATIONEVENT_STATECHANGE,
-                eSetBits);
-    if (st == stateIdle)
-    {
-      PIN_HIGH(LEDx);
-    }
-    else if (state == stateIdle)
-    {
-      PIN_LOW(LEDx);
-    }
-    state = st;
-  }
-}
-
-#else // UZB
-
 void set_state_and_notify(uint8_t st)
 {
   if (state != st)
@@ -237,9 +158,6 @@ void set_state_and_notify(uint8_t st)
     state = st;
   }
 }
-
-
-#endif // UZB
 
 void set_state(uint8_t st)
 {
@@ -268,7 +186,7 @@ Request(
     callbackQueue.requestQueue[callbackQueue.requestIn].wCmd = cmd;
     if (len > (uint8_t)BUF_SIZE_TX)
     {
-      ASSERT((uint8_t)BUF_SIZE_TX >= len);
+      assert((uint8_t)BUF_SIZE_TX >= len);
       len = (uint8_t)BUF_SIZE_TX;
     }
     callbackQueue.requestQueue[callbackQueue.requestIn].wLen = len;
@@ -309,7 +227,7 @@ RequestUnsolicited(
     commandQueue.requestQueue[commandQueue.requestIn].wCmd = cmd;
     if (len > (uint8_t)BUF_SIZE_TX)
     {
-      ASSERT((uint8_t)BUF_SIZE_TX >= len);
+      assert((uint8_t)BUF_SIZE_TX >= len);
       len = (uint8_t)BUF_SIZE_TX;
     }
     commandQueue.requestQueue[commandQueue.requestIn].wLen = len;
@@ -498,12 +416,11 @@ appFileSystemInit(void)
      * We end up here on the first boot after initializing the flash file system
      */
 
-    zpal_radio_region_t mfgRegionConfig;
-    // Check for a valid RF Region value in the manufacturing user data configuration
+    zpal_radio_region_t mfgRegionConfig = REGION_UNDEFINED;
+    // In case of valid MfgToken, override the app default settings.
     ZW_GetMfgTokenDataCountryFreq(&mfgRegionConfig);
-    if ( (mfgRegionConfig <= REGION_US_LR) || (mfgRegionConfig == REGION_JP) || (mfgRegionConfig == REGION_KR) )
+    if (true == isRfRegionValid(mfgRegionConfig))
     {
-      // Valid RF Region configuration found. Use instead of the app default setting
       RadioConfig->eRegion = mfgRegionConfig;
     }
 
@@ -921,7 +838,7 @@ void UsbSuspendCallback(void)
 **--------------------------------------------------------------------------*/
 ZW_APPLICATION_STATUS
 ApplicationInit(
-  EResetReason_t eResetReason)
+  zpal_reset_reason_t eResetReason)
 {
   // Serial API can control hardware with information
   // set in the file system therefore it should be the first
@@ -935,14 +852,14 @@ ApplicationInit(
 #endif
 
 #if SUPPORT_SERIAL_API_READY
-	if (ERESETREASON_SLEEP == eResetReason)
+	if (ZPAL_RESET_REASON_SLEEP == eResetReason)
 	{
 	  /* We have been waken from sleep by timer or external pin event - we must assume we are connected. */
 	  serialLinkState = SERIAL_LINK_CONNECTED;
 	}
 	else
 	{
-		/* We have been waken either by ERESETREASON_POWER_ON or  ERESETREASON_PIN or similar. Initially we are DETACHED */
+		/* We have been waken either by ZPAL_RESET_REASON_POWER_ON or  ZPAL_RESET_REASON_PIN or similar. Initially we are DETACHED */
 	  serialLinkState = SERIAL_LINK_CONNECTED;
 	}
 #endif
@@ -951,7 +868,6 @@ ApplicationInit(
 
 #ifdef DEBUGPRINT
   static uint8_t m_aDebugPrintBuffer[96];
-  zpal_debug_init();
   DebugPrintConfig(m_aDebugPrintBuffer, sizeof(m_aDebugPrintBuffer), zpal_debug_output);
   DebugPrintf("ApplicationInit eResetReason = %d\n", eResetReason);
   ZAF_PrintAppInfo();
@@ -971,13 +887,13 @@ ApplicationInit(
    * ZW_UserTask_CreateTask() can be used to create additional tasks.
    * @see zwave_soc_sensor_pir example for more info.
    *************************************************************************************/
-  bool bWasTaskCreated = ZW_ApplicationRegisterTask(
+  __attribute__((unused)) bool bWasTaskCreated = ZW_ApplicationRegisterTask(
                                                     ApplicationTask,
                                                     EAPPLICATIONEVENT_ZWRX,
                                                     EAPPLICATIONEVENT_ZWCOMMANDSTATUS,
                                                     zaf_get_protocol_config()
                                                     );
-  ASSERT(bWasTaskCreated);
+  assert(bWasTaskCreated);
 
   return (APPLICATION_RUNNING); /*Return false to enter production test mode*/
 }
@@ -1068,7 +984,6 @@ typedef struct SMultiCastNodeMaskHeaderSerial
 static void                       /*RET Nothing                  */
 ApplicationCommandHandler_Bridge(SReceiveMulti* pReceiveMulti)
 {
-#if SUPPORT_APPLICATION_COMMAND_HANDLER_BRIDGE
   /* ZW->HOST: REQ | 0xA8 | rxStatus | destNode | sourceNode | cmdLength
    *          | pCmd[] | multiDestsOffset_NodeMaskLen | multiDestsNodeMask[] | rssiVal
    *          | securityKey | bSourceTxPower | bSourceNoiseFloor */
@@ -1150,67 +1065,6 @@ ApplicationCommandHandler_Bridge(SReceiveMulti* pReceiveMulti)
   }
   /* Unified Application Command Handler for Bridge and Virtual nodes */
   RequestUnsolicited(FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE, compl_workbuf, (uint8_t)(offset + 1 + i));
-#else
-  /* Simulate old split Application Command Handlers */
-  uint8_t offset = 0;
-  if (!IsNodeVirtual(destNode))
-  {
-    /* ZW->PC: REQ | 0x04 | rxStatus | sourceNode | cmdLength | Payload */
-    BYTE_IN_AR(compl_workbuf, 0) = pReceiveMulti->RxOptions.rxStatus;
-    if (SERIAL_API_SETUP_NODEID_BASE_TYPE_16_BIT == nodeIdBaseType)
-    {
-      BYTE_IN_AR(compl_workbuf, offset + 1) = (uint8_t)(pReceiveMulti->RxOptions.sourceNode >> 8);     // MSB
-      BYTE_IN_AR(compl_workbuf, offset + 2) = (uint8_t)(pReceiveMulti->RxOptions.sourceNode & 0xFF);   // LSB
-      offset = 4;  // 16 bit nodeID means the command fields that follow are offset by one byte
-    }
-    else
-    {
-      BYTE_IN_AR(compl_workbuf, 1) = (uint8_t)pReceiveMulti->RxOptions.sourceNode;  // Legacy 8 bit
-      offset = 3;
-    }
-    if (cmdLength > (uint8_t)(BUF_SIZE_TX - offset) )
-    {
-      cmdLength = (uint8_t)(BUF_SIZE_TX - offset) ;
-    }
-    BYTE_IN_AR(compl_workbuf, offset - 1 ) = (uint8_t)cmdLength;
-    for (i = 0; i < cmdLength; i++)
-    {
-      BYTE_IN_AR(compl_workbuf, offset + i) = *((uint8_t*)&pReceiveMulti->Payload + i);
-    }
-    RequestUnsolicited(FUNC_ID_APPLICATION_COMMAND_HANDLER, compl_workbuf, offset + cmdLength);
-  }
-  else
-  {
-    /* ZW->PC: REQ | 0xA1 | rxStatus | destNode | sourceNode | cmdLength | Payload */
-    BYTE_IN_AR(compl_workbuf, 0) = pReceiveMulti->RxOptions.rxStatus;
-    if (SERIAL_API_SETUP_NODEID_BASE_TYPE_16_BIT == nodeIdBaseType)
-    {
-      BYTE_IN_AR(compl_workbuf, 1) = (uint8_t)(pReceiveMulti->RxOptions.destNode >> 8);       // MSB
-      BYTE_IN_AR(compl_workbuf, 2) = (uint8_t)(pReceiveMulti->RxOptions.destNode & 0xFF);     // LSB
-      BYTE_IN_AR(compl_workbuf, 3) = (uint8_t)(pReceiveMulti->RxOptions.sourceNode >> 8);     // MSB
-      BYTE_IN_AR(compl_workbuf, 4) = (uint8_t)(pReceiveMulti->RxOptions.sourceNode & 0xFF);   // LSB
-      offset = 6;  // 16 bit nodeIDs means the command fields that follow are offset by two bytes
-    }
-    else
-    {
-      // Legacy 8 bit nodeIDs
-      BYTE_IN_AR(compl_workbuf, 1) = (uint8_t)pReceiveMulti->RxOptions.destNode;
-      BYTE_IN_AR(compl_workbuf, 2) = (uint8_t)pReceiveMulti->RxOptions.sourceNode;
-      offset = 4;
-    }
-    if (cmdLength > (uint8_t)(BUF_SIZE_TX - offset))
-    {
-      cmdLength = (uint8_t)(BUF_SIZE_TX - offset) ;
-    }
-    BYTE_IN_AR(compl_workbuf, offset - 1) = cmdLength;
-    for (i = 0; i < cmdLength; i++)
-    {
-      BYTE_IN_AR(compl_workbuf, offset + i) = *((uint8_t*)&pReceiveMulti->Payload + i);
-    }
-
-    RequestUnsolicited(FUNC_ID_APPLICATION_SLAVE_COMMAND_HANDLER, compl_workbuf, offset + cmdLength);
-  }
-#endif
 }
 #endif
 
@@ -1241,14 +1095,16 @@ ApplicationNodeUpdate(
   }
 
   /*  - Buffer boundary check */
-  if (bLen > (uint8_t)(BUF_SIZE_TX - (offset + 3)))
-  {
-    bLen = (uint8_t)(BUF_SIZE_TX - (offset + 3));
-  }
+  bLen = (bLen > MAX_NODE_INFO_LENGTH) ? MAX_NODE_INFO_LENGTH : bLen;
+  bLen = (bLen > (uint8_t)(BUF_SIZE_TX - (offset + 3))) ? (uint8_t)(BUF_SIZE_TX - (offset + 3)) : bLen;
+  
   BYTE_IN_AR(compl_workbuf, offset + 2) = bLen;
-  for (uint8_t i = 0; i < bLen; i++)
+  if(bLen > 0 && pCmd)
   {
-    BYTE_IN_AR(compl_workbuf, offset + 3 + i) = *(pCmd + i);
+    for (uint8_t i = 0; i < bLen; i++)
+    {
+      BYTE_IN_AR(compl_workbuf, offset + 3 + i) = *(pCmd + i);
+    }
   }
   RequestUnsolicited(FUNC_ID_ZW_APPLICATION_UPDATE, compl_workbuf, (uint8_t)(offset + bLen + 3));
 }

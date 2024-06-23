@@ -76,9 +76,7 @@ def get_toolchain_default_paths() -> list[pathlib.Path]:
 def get_sdk_default_paths() -> list[pathlib.Path]:
     """Return the path to the SDK."""
     if sys.platform == "darwin":
-        return list(
-            pathlib.Path("~/SimplicityStudio/SDKs").expanduser().glob("gecko_sdk*")
-        )
+        return list(pathlib.Path("~/SimplicityStudio/SDKs").expanduser().glob("*_sdk*"))
 
     return []
 
@@ -393,17 +391,22 @@ def main():
     cmake_build_root = args.build_dir / f"{base_project_name}_cmake"
     shutil.rmtree(cmake_build_root, ignore_errors=True)
 
+    sdk_name: str
+
     # Find the SDK version required by the project
     for sdk in args.sdks:
+        sdk_name = "gecko_sdk" if "gecko_sdk" in sdk.name else "simplicity_sdk"
+
         try:
-            sdk_meta = yaml.load((sdk / "gecko_sdk.slcs").read_text())
+            sdk_meta = yaml.load((sdk / f"{sdk_name}.slcs").read_text())
         except FileNotFoundError:
             LOGGER.warning("SDK %s is not valid, skipping", sdk)
             continue
 
-        assert base_project["sdk"]["id"] == "gecko_sdk"
-
         LOGGER.info("SDK %s has version %s", sdk, sdk_meta["sdk_version"])
+
+        if base_project["sdk"]["id"] != sdk_name:
+            continue
 
         if base_project["sdk"]["version"] == sdk_meta["sdk_version"]:
             LOGGER.info("Version is correct, picking %s", sdk)
@@ -565,7 +568,7 @@ def main():
     extra_compiler_flags = [
         f"-ffile-prefix-map={str(src.absolute())}={dst}"
         for src, dst in {
-            sdk: "/gecko_sdk",
+            sdk: f"/{sdk_name}",
             args.build_dir: "/src",
             toolchain: "/toolchain",
         }.items()

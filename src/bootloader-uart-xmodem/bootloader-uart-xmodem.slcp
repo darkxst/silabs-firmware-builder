@@ -15,7 +15,7 @@ package: bootloader
 quality: production
 readme:
 - {path: readme.md}
-sdk: {id: gecko_sdk, version: 4.4.2}
+sdk: {id: simplicity_sdk, version: 2024.6.0}
 toolchain_settings: []
 component:
 - {id: EFR32MG21A010F1024IM32}
@@ -32,6 +32,7 @@ component:
 - {id: bootloader_xmodem_parser}
 - {id: brd4001a}
 - {id: brd4179b}
+- {id: memory_manager}
 configuration:
 - {name: SL_VCOM_ENABLE, value: '1'}
 ui_hints:

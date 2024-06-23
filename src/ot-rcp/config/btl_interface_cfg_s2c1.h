@@ -231,51 +231,51 @@
 // <<< end of configuration section >>>
 
 #if BOOTLOADER_MANUAL_OVERRIDE_SECURITY_STATE == 1
-#define BOOTLOADER_PPUSATD0_MASK ((BOOTLOADER_PPUSATD0_EMU << _SMU_PPUSATD0_EMU_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_CMU << _SMU_PPUSATD0_CMU_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_HFXO0 << _SMU_PPUSATD0_HFXO0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_HFRCO0 << _SMU_PPUSATD0_HFRCO0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_FSRCO << _SMU_PPUSATD0_FSRCO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_DPLL0 << _SMU_PPUSATD0_DPLL0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_LFXO << _SMU_PPUSATD0_LFXO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_LFRCO << _SMU_PPUSATD0_LFRCO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_ULFRCO << _SMU_PPUSATD0_ULFRCO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_MSC << _SMU_PPUSATD0_MSC_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_ICACHE0 << _SMU_PPUSATD0_ICACHE0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_PRS << _SMU_PPUSATD0_PRS_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_GPIO << _SMU_PPUSATD0_GPIO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_LDMA << _SMU_PPUSATD0_LDMA_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_LDMAXBAR << _SMU_PPUSATD0_LDMAXBAR_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_TIMER0 << _SMU_PPUSATD0_TIMER0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_TIMER1 << _SMU_PPUSATD0_TIMER1_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_TIMER2 << _SMU_PPUSATD0_TIMER2_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_TIMER3 << _SMU_PPUSATD0_TIMER3_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_USART0 << _SMU_PPUSATD0_USART0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_USART1 << _SMU_PPUSATD0_USART1_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_USART2 << _SMU_PPUSATD0_USART2_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_BURTC << _SMU_PPUSATD0_BURTC_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_I2C1 << _SMU_PPUSATD0_I2C1_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_CHIPTESTCTRL << _SMU_PPUSATD0_CHIPTESTCTRL_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_LVGD << _SMU_PPUSATD0_LVGD_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_SYSCFG << _SMU_PPUSATD0_SYSCFG_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_BURAM << _SMU_PPUSATD0_BURAM_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_IFADCDEBUG << _SMU_PPUSATD0_IFADCDEBUG_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_GPCRC << _SMU_PPUSATD0_GPCRC_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD0_RTCC << _SMU_PPUSATD0_RTCC_SHIFT))
-#define BOOTLOADER_PPUSATD1_MASK ((BOOTLOADER_PPUSATD1_LETIMER0 << _SMU_PPUSATD1_LETIMER0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_IADC0 << _SMU_PPUSATD1_IADC0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_ACMP0 << _SMU_PPUSATD1_ACMP0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_ACMP1 << _SMU_PPUSATD1_ACMP1_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_I2C0 << _SMU_PPUSATD1_I2C0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_HFRCOEM23 << _SMU_PPUSATD1_HFRCOEM23_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_WDOG0 << _SMU_PPUSATD1_WDOG0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_WDOG1 << _SMU_PPUSATD1_WDOG1_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_AMUXCP0 << _SMU_PPUSATD1_AMUXCP0_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_RADIOAES << _SMU_PPUSATD1_RADIOAES_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_BUFC << _SMU_PPUSATD1_BUFC_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_SMU << _SMU_PPUSATD1_SMU_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_AHBRADIO << _SMU_PPUSATD1_AHBRADIO_SHIFT) \
-                                   | (BOOTLOADER_PPUSATD1_SEMAILBOX << _SMU_PPUSATD1_SEMAILBOX_SHIFT))
+#define BOOTLOADER_PPUSATD0_MASK ((BOOTLOADER_PPUSATD0_EMU << _SMU_PPUSATD0_EMU_SHIFT)                     \
+                                  | (BOOTLOADER_PPUSATD0_CMU << _SMU_PPUSATD0_CMU_SHIFT)                   \
+                                  | (BOOTLOADER_PPUSATD0_HFXO0 << _SMU_PPUSATD0_HFXO0_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_HFRCO0 << _SMU_PPUSATD0_HFRCO0_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_FSRCO << _SMU_PPUSATD0_FSRCO_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_DPLL0 << _SMU_PPUSATD0_DPLL0_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_LFXO << _SMU_PPUSATD0_LFXO_SHIFT)                 \
+                                  | (BOOTLOADER_PPUSATD0_LFRCO << _SMU_PPUSATD0_LFRCO_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_ULFRCO << _SMU_PPUSATD0_ULFRCO_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_MSC << _SMU_PPUSATD0_MSC_SHIFT)                   \
+                                  | (BOOTLOADER_PPUSATD0_ICACHE0 << _SMU_PPUSATD0_ICACHE0_SHIFT)           \
+                                  | (BOOTLOADER_PPUSATD0_PRS << _SMU_PPUSATD0_PRS_SHIFT)                   \
+                                  | (BOOTLOADER_PPUSATD0_GPIO << _SMU_PPUSATD0_GPIO_SHIFT)                 \
+                                  | (BOOTLOADER_PPUSATD0_LDMA << _SMU_PPUSATD0_LDMA_SHIFT)                 \
+                                  | (BOOTLOADER_PPUSATD0_LDMAXBAR << _SMU_PPUSATD0_LDMAXBAR_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD0_TIMER0 << _SMU_PPUSATD0_TIMER0_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_TIMER1 << _SMU_PPUSATD0_TIMER1_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_TIMER2 << _SMU_PPUSATD0_TIMER2_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_TIMER3 << _SMU_PPUSATD0_TIMER3_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_USART0 << _SMU_PPUSATD0_USART0_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_USART1 << _SMU_PPUSATD0_USART1_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_USART2 << _SMU_PPUSATD0_USART2_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_BURTC << _SMU_PPUSATD0_BURTC_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_I2C1 << _SMU_PPUSATD0_I2C1_SHIFT)                 \
+                                  | (BOOTLOADER_PPUSATD0_CHIPTESTCTRL << _SMU_PPUSATD0_CHIPTESTCTRL_SHIFT) \
+                                  | (BOOTLOADER_PPUSATD0_LVGD << _SMU_PPUSATD0_LVGD_SHIFT)                 \
+                                  | (BOOTLOADER_PPUSATD0_SYSCFG << _SMU_PPUSATD0_SYSCFG_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD0_BURAM << _SMU_PPUSATD0_BURAM_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_IFADCDEBUG << _SMU_PPUSATD0_IFADCDEBUG_SHIFT)     \
+                                  | (BOOTLOADER_PPUSATD0_GPCRC << _SMU_PPUSATD0_GPCRC_SHIFT)               \
+                                  | (BOOTLOADER_PPUSATD0_RTCC << _SMU_PPUSATD0_RTCC_SHIFT))
+#define BOOTLOADER_PPUSATD1_MASK ((BOOTLOADER_PPUSATD1_LETIMER0 << _SMU_PPUSATD1_LETIMER0_SHIFT)     \
+                                  | (BOOTLOADER_PPUSATD1_IADC0 << _SMU_PPUSATD1_IADC0_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD1_ACMP0 << _SMU_PPUSATD1_ACMP0_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD1_ACMP1 << _SMU_PPUSATD1_ACMP1_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD1_I2C0 << _SMU_PPUSATD1_I2C0_SHIFT)           \
+                                  | (BOOTLOADER_PPUSATD1_HFRCOEM23 << _SMU_PPUSATD1_HFRCOEM23_SHIFT) \
+                                  | (BOOTLOADER_PPUSATD1_WDOG0 << _SMU_PPUSATD1_WDOG0_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD1_WDOG1 << _SMU_PPUSATD1_WDOG1_SHIFT)         \
+                                  | (BOOTLOADER_PPUSATD1_AMUXCP0 << _SMU_PPUSATD1_AMUXCP0_SHIFT)     \
+                                  | (BOOTLOADER_PPUSATD1_RADIOAES << _SMU_PPUSATD1_RADIOAES_SHIFT)   \
+                                  | (BOOTLOADER_PPUSATD1_BUFC << _SMU_PPUSATD1_BUFC_SHIFT)           \
+                                  | (BOOTLOADER_PPUSATD1_SMU << _SMU_PPUSATD1_SMU_SHIFT)             \
+                                  | (BOOTLOADER_PPUSATD1_AHBRADIO << _SMU_PPUSATD1_AHBRADIO_SHIFT)   \
+                                  | (BOOTLOADER_PPUSATD1_SEMAILBOX << _SMU_PPUSATD1_SEMAILBOX_SHIFT))
 #endif // BOOTLOADER_MANUAL_OVERRIDE_SECURITY_STATE
 
 #endif // BTL_INTERFACE_CFG_S2C1_H

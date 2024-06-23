@@ -1,6 +1,6 @@
 /***************************************************************************//**
  * # License
- * <b> Copyright 2023 Silicon Laboratories Inc. www.silabs.com </b>
+ * <b> Copyright 2024 Silicon Laboratories Inc. www.silabs.com </b>
  *******************************************************************************
  *
  * The licensor of this software is Silicon Laboratories Inc. Your use of this
@@ -27,8 +27,8 @@
 
 // <q ZAF_CONFIG_BOOTLOADER_UPGRADABLE> Indicates if the bootloader can be updated
 // <i> Includes the bootloader as a target
-// <i> Default: 0
-#define ZAF_CONFIG_BOOTLOADER_UPGRADABLE  0
+// <i> Default: 1
+#define ZAF_CONFIG_BOOTLOADER_UPGRADABLE  1
 
 // </h>
 // <h> Command Class Firmware Update - Firmware targets
@@ -330,7 +330,7 @@
 // <GENERIC_TYPE_ENTRY_CONTROL=> Entry Control
 // <GENERIC_TYPE_GENERIC_CONTROLLER=> Generic Controller
 // <GENERIC_TYPE_METER=> Meter
-// <GENERIC_TYPE_REPEATER_SLAVE=> Repeater End Device
+// <GENERIC_TYPE_REPEATER_END_NODE=> Repeater End Device
 // <GENERIC_TYPE_SENSOR_MULTILEVEL=> Sensor Multilevel
 // <GENERIC_TYPE_SWITCH_BINARY=> Switch Binary
 // <GENERIC_TYPE_SWITCH_MULTILEVEL=> Switch Multilevel
@@ -338,7 +338,7 @@
 // <GENERIC_TYPE_WALL_CONTROLLER=> Wall Controller
 // <GENERIC_TYPE_SENSOR_NOTIFICATION=> Sensor Notification
 // <i> Default: 0
-#define ZAF_CONFIG_GENERIC_TYPE  0
+#define ZAF_CONFIG_GENERIC_TYPE  GENERIC_TYPE_STATIC_CONTROLLER
 
 // <o ZAF_CONFIG_SPECIFIC_TYPE> The specific type of a device.
 // <i> The specific type of a device. A certain device type requires a specific type, e.g., the Lock device type requires the specific type to be Door Lock.
@@ -358,10 +358,10 @@
 // <SPECIFIC_TYPE_SECURE_KEYPAD=> Secure Keypad
 // <SPECIFIC_TYPE_ROUTING_SENSOR_MULTILEVEL=> Routing Sensor Multilevel
 // <SPECIFIC_TYPE_NOTIFICATION_SENSOR=> Notification Sensor
-// <SPECIFIC_TYPE_REPEATER_SLAVE=> Repeater End Device
+// <SPECIFIC_TYPE_REPEATER_END_NODE=> Repeater End Device
 // <SPECIFIC_TYPE_IR_REPEATER=> Infrared Repeater
 // <i> Default: SPECIFIC_TYPE_NOT_USED
-#define ZAF_CONFIG_SPECIFIC_TYPE  0
+#define ZAF_CONFIG_SPECIFIC_TYPE  SPECIFIC_TYPE_PC_CONTROLLER
 
 // </h>
 // <h> Multi Channel Configuration

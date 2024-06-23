@@ -9,7 +9,7 @@
 #include "app.h"
 #include "sl_dcdc.h"
 #include "ZW_typedefs.h"
-#include "ZW_SerialAPI.h"
+#include "SerialAPI.h"
 #include "zpal_nvm.h"
 #include "serialapi_file.h"
 #include "ZAF_nvm_app.h"

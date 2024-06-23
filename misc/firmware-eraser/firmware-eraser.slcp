@@ -19,10 +19,10 @@ source:
 - {path: app.cpp}
 - {path: main.cpp}
 include:
-- path: ''
+- path: .
   file_list:
   - {path: app.h}
-sdk: {id: gecko_sdk, version: 4.4.2}
+sdk: {id: simplicity_sdk, version: 2024.6.0}
 toolchain_settings: []
 component:
 - {id: EFR32MG21A010F1024IM32}

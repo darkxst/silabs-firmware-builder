@@ -21,8 +21,7 @@
 #include <serialapi_file.h>
 #include <string.h>
 #include "SizeOf.h"
-#include "Assert.h"
-#include "DebugPrintConfig.h"
+#include <assert.h>
 //#define DEBUGPRINT
 //#include "DebugPrint.h"
 #include "SyncEvent.h"
@@ -106,10 +105,6 @@ typedef struct __attribute__((packed)) SApplicationConfiguration  // Must be pac
 
 static void WriteDefault(void);
 
-// Application file system
-static zpal_nvm_handle_t pFileSystemApplication;
-
-
 static void WriteDefaultApplicationConfiguration(void);
 static bool ObjectExist(zpal_nvm_object_key_t key);
 
@@ -127,8 +122,8 @@ static void
 SerialAPI_FileSystemMigrationManagement(void)
 {
   //Read present file system version file
-  uint32_t presentFilesysVersion;
-  uint32_t expectedFilesysVersion;  // This will hold the file system version that current SW will support.
+  uint32_t presentFilesysVersion = 0;
+  uint32_t expectedFilesysVersion = 0;  // This will hold the file system version that current SW will support.
 
   SerialAPI_GetZWVersion(&presentFilesysVersion);
 
@@ -137,7 +132,7 @@ SerialAPI_FileSystemMigrationManagement(void)
   if(expectedFilesysVersion < presentFilesysVersion)
   {
     //System downgrade. Should not be allowed.
-    ASSERT(false);
+    assert(false);
   }
   else if(expectedFilesysVersion > presentFilesysVersion)  // File system upgrade needed. Initiating file system migration...
   {
@@ -152,18 +147,18 @@ SerialAPI_FileSystemMigrationManagement(void)
       // Add code for migration of file system to version APP_VERSION_7_15_3 (7.15.3).
 
       //Get length of legacy file
-      size_t   dataLen;
-      zpal_nvm_get_object_size(pFileSystemApplication, FILE_ID_APPLICATIONCONFIGURATION, &dataLen);
+      size_t dataLen = 0;
+      ZAF_nvm_app_get_object_size(FILE_ID_APPLICATIONCONFIGURATION, &dataLen);
 
       //Read legacy file to first members of tApplicationConfiguration
-      SApplicationConfiguration_v7_15_3 tApplicationConfiguration = { 0 };
+      SApplicationConfiguration_v7_15_3 tApplicationConfiguration = { .rfRegion = REGION_UNDEFINED };
       // Initialize, since zpal_nvm_read() might fail.
-      zpal_nvm_read(pFileSystemApplication, FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, dataLen);
+      ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, dataLen);
 
       //Write default values to new members of tApplicationConfiguration and update the file.
       tApplicationConfiguration.radio_debug_enable = 0;
       tApplicationConfiguration.maxTxPower = 140;
-      zpal_status_t status = zpal_nvm_write(pFileSystemApplication, FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration,
+      zpal_status_t status = ZAF_nvm_app_write(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration,
           sizeof(tApplicationConfiguration));
       if (ZPAL_STATUS_OK == status)
       {
@@ -174,11 +169,11 @@ SerialAPI_FileSystemMigrationManagement(void)
     // Migrate files from file system version APP_VERSION_7_15_3 to APP_VERSION_7_18_1.
     if ( presentFilesysVersion < APP_VERSION_7_18_1 )
     {
-      SApplicationConfiguration_v7_15_3 tApplicationConfiguration_v7_15_3 = { 0 };
-      SApplicationConfiguration_V7_18_1 tApplicationConfiguration = { 0 };
+      SApplicationConfiguration_v7_15_3 tApplicationConfiguration_v7_15_3 = { .rfRegion = REGION_UNDEFINED };
+      SApplicationConfiguration_V7_18_1 tApplicationConfiguration = { .rfRegion = REGION_UNDEFINED };
       zpal_status_t status;
 
-      status = zpal_nvm_read(pFileSystemApplication, FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration_v7_15_3,
+      status = ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration_v7_15_3,
           sizeof(tApplicationConfiguration_v7_15_3));
       if (ZPAL_STATUS_OK != status)
       {
@@ -192,7 +187,7 @@ SerialAPI_FileSystemMigrationManagement(void)
         tApplicationConfiguration.radio_debug_enable = tApplicationConfiguration_v7_15_3.radio_debug_enable;
         tApplicationConfiguration.maxTxPower         = tApplicationConfiguration_v7_15_3.maxTxPower;
 
-        status = zpal_nvm_write(pFileSystemApplication, FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration,
+        status = ZAF_nvm_app_write(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration,
             sizeof(tApplicationConfiguration));  /* Do not use FILE_SIZE_APPLICATIONCONFIGURATION in
                                                   * migration functions, instead hard-code the size as
                                                   * sizes do change with FW upgrades. */
@@ -209,11 +204,11 @@ SerialAPI_FileSystemMigrationManagement(void)
     // Migrate files from file system version APP_VERSION_7_20_0 (same as 7_18_1) to APP_VERSION_7_21_0.
     if ( presentFilesysVersion < APP_VERSION_7_21_0 )
     {
-      SApplicationConfiguration sAppCfgMigration = { 0 };
+      SApplicationConfiguration sAppCfgMigration = { .rfRegion = REGION_UNDEFINED };
       zpal_status_t status;
 
       //cannot migrate if the file system is older than V7.18.1. Other migration script should have been called before.
-      ASSERT(APP_VERSION_7_18_1 <= presentFilesysVersion);
+      assert(APP_VERSION_7_18_1 <= presentFilesysVersion);
 
       /*New application configuration has only a new member (no change in the legacy part). So read the
       legacy structure directly in the new one, then just set value for new member.*/
@@ -243,7 +238,7 @@ SerialAPI_FileSystemMigrationManagement(void)
     /*
      * If this fails, some of the migrations were not performed due to earlier migrations that have failed.
      */
-    ASSERT(APP_VERSION_7_21_0 <= presentFilesysVersion);
+    assert(APP_VERSION_7_21_0 <= presentFilesysVersion);
 
     /**
      * @attention This implementation assumes that the build is going to update the ZAF_FILE_ID_APP_VERSION to the current!
@@ -262,16 +257,16 @@ uint8_t SerialApiFileInit(void)
   bool initStatus = ZAF_nvm_app_init();
   if (!initStatus)
   {
-    ASSERT(false); //Assert has been kept for debugging , can be removed from production code. This error can only be caused by some internal flash HW failure
+    assert(false); //Assert has been kept for debugging , can be removed from production code. This error can only be caused by some internal flash HW failure
   }
 
   initStatus = ZAF_nvm_init();
   if (!initStatus)
   {
-    ASSERT(false); //Assert has been kept for debugging , can be removed from production code. This error can only be caused by some internal flash HW failure
+    assert(false); //Assert has been kept for debugging , can be removed from production code. This error can only be caused by some internal flash HW failure
   }
 
-  uint32_t appVersion;
+  uint32_t appVersion = 0;
   bool status = SerialAPI_GetZWVersion(&appVersion);
 
   if (status)
@@ -569,16 +564,13 @@ ReadApplicationRfRegion(zpal_radio_region_t* rfRegion)
 uint8_t
 SaveApplicationNodeIdBaseType(eSerialAPISetupNodeIdBaseType nodeIdBaseType)
 {
-  SApplicationConfiguration tApplicationConfiguration = { 0 };
+  SApplicationConfiguration tApplicationConfiguration = { .rfRegion = REGION_UNDEFINED };
   uint8_t dataIsWritten = false;
-  zpal_status_t status;
-
-  status = ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION);
-  if (ZPAL_STATUS_OK == status)
+  
+  if (ZPAL_STATUS_OK == ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION))
   {
     tApplicationConfiguration.nodeIdBaseType = nodeIdBaseType;
-    status = ZAF_nvm_app_write(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION);
-    if (ZPAL_STATUS_OK == status)
+    if (ZPAL_STATUS_OK == ZAF_nvm_app_write(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION))
     {
       dataIsWritten = true;
     }
@@ -589,18 +581,14 @@ SaveApplicationNodeIdBaseType(eSerialAPISetupNodeIdBaseType nodeIdBaseType)
 uint8_t
 ReadApplicationNodeIdBaseType(eSerialAPISetupNodeIdBaseType* nodeIdBaseType)
 {
-  SApplicationConfiguration tApplicationConfiguration;
+  SApplicationConfiguration tApplicationConfiguration = { .rfRegion = REGION_UNDEFINED };
   uint8_t dataIsRead = false;
-  zpal_status_t status;
-
-  if (ObjectExist(FILE_ID_APPLICATIONCONFIGURATION))
+  
+  if (ObjectExist(FILE_ID_APPLICATIONCONFIGURATION)
+    && (ZPAL_STATUS_OK == ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION)))
   {
-    status = ZAF_nvm_app_read(FILE_ID_APPLICATIONCONFIGURATION, &tApplicationConfiguration, FILE_SIZE_APPLICATIONCONFIGURATION);
-    if (ZPAL_STATUS_OK == status)
-    {
-      *nodeIdBaseType = tApplicationConfiguration.nodeIdBaseType;
+    *nodeIdBaseType = tApplicationConfiguration.nodeIdBaseType;
       dataIsRead = true;
-    }
   }
   return dataIsRead;
 
@@ -734,9 +722,8 @@ ReadApplicationEnablePTI(uint8_t *radio_debug_enable)
 uint32_t
 ReadApplicationVersion(void)
 {
-  uint32_t appVersion;
+  uint32_t appVersion = 0;
   SerialAPI_GetZWVersion(&appVersion);
-
   return appVersion;
 }
 

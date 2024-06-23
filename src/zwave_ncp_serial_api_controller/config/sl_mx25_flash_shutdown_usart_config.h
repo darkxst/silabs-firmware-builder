@@ -1,9 +1,9 @@
 /***************************************************************************//**
  * @file
- * @brief
+ * @brief SL_MX25_FLASH_SHUTDOWN_USART Config
  *******************************************************************************
  * # License
- * <b>Copyright 2023 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,21 +28,40 @@
  *
  ******************************************************************************/
 
-#ifndef SL_RAIL_UTIL_SEQUENCER_H
-#define SL_RAIL_UTIL_SEQUENCER_H
+#ifndef SL_MX25_FLASH_SHUTDOWN_CONFIG_H
+#define SL_MX25_FLASH_SHUTDOWN_CONFIG_H
 
-#include "rail.h"
+// <<< sl:start pin_tool >>>
+// {usart signal=TX,RX,CLK} SL_MX25_FLASH_SHUTDOWN
+// [USART_SL_MX25_FLASH_SHUTDOWN]
+#define SL_MX25_FLASH_SHUTDOWN_PERIPHERAL        USART0
+#define SL_MX25_FLASH_SHUTDOWN_PERIPHERAL_NO     0
 
-#ifdef __cplusplus
-extern "C" {
+// USART0 TX on PC01
+#define SL_MX25_FLASH_SHUTDOWN_TX_PORT           gpioPortC
+#define SL_MX25_FLASH_SHUTDOWN_TX_PIN            1
+
+// USART0 RX on PC02
+#define SL_MX25_FLASH_SHUTDOWN_RX_PORT           gpioPortC
+#define SL_MX25_FLASH_SHUTDOWN_RX_PIN            2
+
+// USART0 CLK on PC03
+#define SL_MX25_FLASH_SHUTDOWN_CLK_PORT          gpioPortC
+#define SL_MX25_FLASH_SHUTDOWN_CLK_PIN           3
+
+// [USART_SL_MX25_FLASH_SHUTDOWN]
+
+// <gpio> SL_MX25_FLASH_SHUTDOWN_CS
+
+// $[GPIO_SL_MX25_FLASH_SHUTDOWN_CS]
+#ifndef SL_MX25_FLASH_SHUTDOWN_CS_PORT          
+#define SL_MX25_FLASH_SHUTDOWN_CS_PORT           gpioPortA
 #endif
-
-#define SL_RAIL_UTIL_SEQUENCER_RUNTIME_IMAGE_SELECTION 0
-
-#define SL_RAIL_UTIL_SEQUENCER_IMAGE RAIL_SEQ_IMAGE_ZWAVE
-
-#ifdef __cplusplus
-}
+#ifndef SL_MX25_FLASH_SHUTDOWN_CS_PIN           
+#define SL_MX25_FLASH_SHUTDOWN_CS_PIN            6
 #endif
+// [GPIO_SL_MX25_FLASH_SHUTDOWN_CS]$
 
-#endif // SL_RAIL_UTIL_SEQUENCER_H
+// <<< sl:end pin_tool >>>
+
+#endif // SL_MX25_FLASH_SHUTDOWN_CONFIG_H

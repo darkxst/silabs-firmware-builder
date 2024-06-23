@@ -59,6 +59,11 @@
 #include "SEGGER_SYSVIEW_FreeRTOS.h"
 #endif
 
+#if defined(SL_CATALOG_CODE_CLASSIFICATION_VALIDATOR_PRESENT)
+#include "sli_code_classification_validator.h"
+#define traceTASK_SWITCHED_IN() sli_ccv_task_switched_in()
+#endif
+
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
 //  <o>Minimal stack size [words] <0-65535>
@@ -93,8 +98,8 @@
 
 //  <o>Preemption interrupt priority
 //  <i> Maximum priority of interrupts that are safe to call FreeRTOS API.
-//  <i> Default: 96
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    32
+//  <i> Default: 48
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    16
 
 //  <q>Use time slicing
 //  <i> Enable setting to use timeslicing.
@@ -153,12 +158,6 @@
 //  <i> Default: 1
 #define configENABLE_FPU                        1
 
-//  <q>Use Memory Protection Unit
-//  <i> Using Memory Protection Unit (MPU) requires detailed memory map definition.
-//  <i> This setting is only releavant for MPU enabled ports.
-//  <i> Default: 0
-#define configENABLE_MPU                        0
-
 //  <o>Minimal secure stack size [words] <0-65535>
 //  <i> Stack for idle task Secure side context in words.
 //  <i> This setting is only relevant when TrustZone extension is enabled.
@@ -182,6 +181,9 @@
 
 //------------- <<< end of configuration section >>> ---------------------------
 
+/* MPU feature is not supported in Silicon Labs port */
+#define configENABLE_MPU                        0
+
 /* Defines needed by FreeRTOS to implement CMSIS RTOS2 API. Do not change! */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configSUPPORT_STATIC_ALLOCATION         1
@@ -196,7 +198,7 @@
 #define configUSE_16_BIT_TICKS                  0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configMAX_PRIORITIES                    56
-#define configKERNEL_INTERRUPT_PRIORITY         224
+#define configKERNEL_INTERRUPT_PRIORITY         112
 
 /* Defines that include FreeRTOS functions which implement CMSIS RTOS2 API. Do not change! */
 #define INCLUDE_xEventGroupSetBitsFromISR       1
@@ -250,8 +252,8 @@
 #define INCLUDE_xResumeFromISR                        1
 
 /* FreeRTOS Secure Side Only and TrustZone Security Extension */
-#define configRUN_FREERTOS_SECURE_ONLY                0
-#define configENABLE_TRUSTZONE                        1
+#define configRUN_FREERTOS_SECURE_ONLY                1
+#define configENABLE_TRUSTZONE                        0
 
 /* Thread local storage pointers used by the SDK */
 #ifndef configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS

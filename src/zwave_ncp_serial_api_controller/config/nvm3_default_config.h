@@ -34,8 +34,8 @@
 // <o NVM3_DEFAULT_NVM_SIZE> NVM3 Default Instance Size
 // <i> Size of the NVM3 storage region in flash. This size should be aligned with
 // <i> the flash page size of the device.
-// <i> Default: 36864
-#define NVM3_DEFAULT_NVM_SIZE  36864
+// <i> Default: 40960
+#define NVM3_DEFAULT_NVM_SIZE  40960
 #endif
 
 // </h>

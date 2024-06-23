@@ -18,15 +18,15 @@
 
 // <h>Zigbee Source Route Library configuration
 
-// <o EMBER_SOURCE_ROUTE_TABLE_SIZE> Source route table Size (SoC or NCP) <2-255>
+// <o SL_ZIGBEE_SOURCE_ROUTE_TABLE_SIZE> Source route table Size (SoC or NCP) <2-255>
 // <i> Default: 7
 // <i> The size of the source route table for storing source routes on the SOC or NCP.
-#define EMBER_SOURCE_ROUTE_TABLE_SIZE   200
+#define SL_ZIGBEE_SOURCE_ROUTE_TABLE_SIZE   7
 
-// <o EMBER_MAX_SOURCE_ROUTE_RELAY_COUNT> Max source route relay counts <11-40>
+// <o SL_ZIGBEE_MAX_SOURCE_ROUTE_RELAY_COUNT> Max source route relay counts <11-40>
 // <i> Default: 11
 // <i> Max source route hops accepted or/and inserted in the source route table/header.
-#define EMBER_MAX_SOURCE_ROUTE_RELAY_COUNT   11
+#define SL_ZIGBEE_MAX_SOURCE_ROUTE_RELAY_COUNT   11
 
 // </h>
 

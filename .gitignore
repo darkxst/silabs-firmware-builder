@@ -12,5 +12,8 @@ build/
 artifact/
 artifacts/
 trashed_modified_files/
+
 src/**/*.bak
+src/**/*.bak0
 misc/**/*.bak
+misc/**/*.bak0

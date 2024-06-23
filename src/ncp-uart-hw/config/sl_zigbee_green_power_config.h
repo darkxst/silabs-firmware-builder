@@ -18,35 +18,35 @@
 
 // <h>Zigbee Green Power Library configuration
 
-// <o EMBER_GP_PROXY_TABLE_SIZE> Green Power Proxy Table Size <1-126>
+// <o SL_ZIGBEE_GP_PROXY_TABLE_SIZE> Green Power Proxy Table Size <1-126>
 // <i> Default: 5
 // <i> The maximum number of Green Power proxy table entries supported by the stack.
-#define EMBER_GP_PROXY_TABLE_SIZE   5
+#define SL_ZIGBEE_GP_PROXY_TABLE_SIZE   5
 
-// <o EMBER_GP_SINK_TABLE_SIZE> Green Power Sink Table Size <0-126>
+// <o SL_ZIGBEE_GP_SINK_TABLE_SIZE> Green Power Sink Table Size <0-126>
 // <i> Default: 0
 // <i> The maximum number of Green Power sink table entries supported by the stack.
-#define EMBER_GP_SINK_TABLE_SIZE   0
+#define SL_ZIGBEE_GP_SINK_TABLE_SIZE   0
 
-// <o EMBER_GP_INCOMING_FC_TOKEN_TIMEOUT> Green Power incoming FC (as part of proxy table) Token timeout <0-60>
+// <o SL_ZIGBEE_GP_INCOMING_FC_TOKEN_TIMEOUT> Green Power incoming FC (as part of proxy table) Token timeout <0-60>
 // <i> Default: 0
 // <i> The timeout (seconds) to restore the GPD incoming security frame counter in the Flash (0 being never).
-#define EMBER_GP_INCOMING_FC_TOKEN_TIMEOUT   7
+#define SL_ZIGBEE_GP_INCOMING_FC_TOKEN_TIMEOUT   7
 
-// <o EMBER_GP_INCOMING_FC_TOKEN_TABLE_SIZE> Green Power incoming FC (as part of proxy table) table token table size <0-126>
+// <o SL_ZIGBEE_GP_INCOMING_FC_TOKEN_TABLE_SIZE> Green Power incoming FC (as part of proxy table) table token table size <0-126>
 // <i> Default: 0
-// <i> The maximum table size to restore the GPD incoming security frame counter in the Flash (being either 0 or EMBER_GP_PROXY_TABLE_SIZE).
-#define EMBER_GP_INCOMING_FC_TOKEN_TABLE_SIZE   0
+// <i> The maximum table size to restore the GPD incoming security frame counter in the Flash (being either 0 or SL_ZIGBEE_GP_PROXY_TABLE_SIZE).
+#define SL_ZIGBEE_GP_INCOMING_FC_TOKEN_TABLE_SIZE   0
 
-// <o EMBER_GP_INCOMING_FC_IN_SINK_TOKEN_TIMEOUT> Green Power incoming FC (as part of sink table) token table token timeout <0-60>
+// <o SL_ZIGBEE_GP_INCOMING_FC_IN_SINK_TOKEN_TIMEOUT> Green Power incoming FC (as part of sink table) token table token timeout <0-60>
 // <i> Default: 0
 // <i> The timeout (seconds) to restore the GPD incoming security frame counter in the Flash (0 being never).
-#define EMBER_GP_INCOMING_FC_IN_SINK_TOKEN_TIMEOUT   7
+#define SL_ZIGBEE_GP_INCOMING_FC_IN_SINK_TOKEN_TIMEOUT   7
 
-// <o EMBER_GP_INCOMING_FC_IN_SINK_TOKEN_TABLE_SIZE> Green Power incoming FC (as part of sink table)Token table size <0-126>
+// <o SL_ZIGBEE_GP_INCOMING_FC_IN_SINK_TOKEN_TABLE_SIZE> Green Power incoming FC (as part of sink table)Token table size <0-126>
 // <i> Default: 0
-// <i> The maximum table size to restore the GPD incoming security frame counter in the Flash (being either 0 or EMBER_GP_SINK_TABLE_SIZE).
-#define EMBER_GP_INCOMING_FC_IN_SINK_TOKEN_TABLE_SIZE   0
+// <i> The maximum table size to restore the GPD incoming security frame counter in the Flash (being either 0 or SL_ZIGBEE_GP_SINK_TABLE_SIZE).
+#define SL_ZIGBEE_GP_INCOMING_FC_IN_SINK_TOKEN_TABLE_SIZE   0
 
 // </h>
 

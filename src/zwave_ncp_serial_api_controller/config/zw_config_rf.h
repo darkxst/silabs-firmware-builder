@@ -1,6 +1,6 @@
 /***************************************************************************//**
  * # License
- * <b> Copyright 2023 Silicon Laboratories Inc. www.silabs.com </b>
+ * <b> Copyright 2024 Silicon Laboratories Inc. www.silabs.com </b>
  *******************************************************************************
  *
  * The licensor of this software is Silicon Laboratories Inc. Your use of this
@@ -24,7 +24,7 @@
 // <i> Default: 140
 #define APP_MAX_TX_POWER_LR  140
 
-// <o APP_MAX_TX_POWER> The maximum allowed Tx power in deci dBm for Z-Wave network <-100..140:1> <f.d>
+// <o APP_MAX_TX_POWER> The maximum allowed Tx power in deci dBm for Z-Wave network <-100..200:1> <f.d>
 // <i> The maximum allowed Tx power in deci dBm for Z-Wave network
 // <i> Default: 0
 #define APP_MAX_TX_POWER  0

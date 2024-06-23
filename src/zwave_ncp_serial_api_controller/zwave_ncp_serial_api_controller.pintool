@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
-<device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/ss/hwconfig/document/device.ecore" name="pin_tool.ZGM130S037HGN" partId="mcu.arm.efr32.zg13.zgm130s037hgn" contextId="com.silabs.sdk.stack.super:4.4.2._-295637085">
+<device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/ss/hwconfig/document/device.ecore" name="pin_tool.ZGM230SB27HGN" partId="mcu.arm.efr32.zg23.zgm230sb27hgn" contextId="com.silabs.sdk.stack.sisdk:2024.6.0._125087053">
   <mode name="DefaultMode">
-    <property object="DBG" propertyId="ABModule.selectedRequirement" value="dbg%T%SL_DEBUG%T%sl_debug_swo_config.h"/>
-    <property object="DBG" propertyId="ABPeripheral.included" value="true"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
-    <property object="PA2" propertyId="ABModule.selectedRequirement" value="gpio%T%LED3_GPIO%T%extension_board_8029a_efr32xg13_led.h"/>
-    <property object="PA2" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PA3" propertyId="ABModule.selectedRequirement" value="gpio%T%LED4_GPIO%T%extension_board_8029a_efr32xg13_led.h"/>
-    <property object="PA3" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PA5" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_BOARD_ENABLE_VCOM%T%sl_board_control_config.h"/>
-    <property object="PA5" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PC10" propertyId="ABModule.selectedRequirement" value="gpio%T%PB3_GPIO%T%extension_board_8029a_efr32xg13_button.h"/>
-    <property object="PC10" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PC11" propertyId="ABModule.selectedRequirement" value="gpio%T%PB4_GPIO%T%extension_board_8029a_efr32xg13_button.h"/>
-    <property object="PC11" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PC9" propertyId="ABModule.selectedRequirement" value="gpio%T%SLIDER1_GPIO%T%extension_board_8029a_efr32xg13_slider.h"/>
-    <property object="PC9" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PD15" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_BOARD_ENABLE_SENSOR_RHT%T%sl_board_control_config.h"/>
-    <property object="PD15" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PF3" propertyId="ABModule.selectedRequirement" value="gpio%T%LED2_GPIO%T%extension_board_8029a_efr32xg13_led.h"/>
-    <property object="PF3" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PF4" propertyId="ABModule.selectedRequirement" value="gpio%T%LED1_GPIO%T%extension_board_8029a_efr32xg13_led.h"/>
-    <property object="PF4" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PF6" propertyId="ABModule.selectedRequirement" value="gpio%T%PB1_GPIO%T%extension_board_8029a_efr32xg13_button.h"/>
-    <property object="PF6" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PF7" propertyId="ABModule.selectedRequirement" value="gpio%T%PB2_GPIO%T%extension_board_8029a_efr32xg13_button.h"/>
-    <property object="PF7" propertyId="pin.reserve" value="Reserved"/>
-    <property object="PORTIO" propertyId="portio.dbg.enable.swv" value="Enabled"/>
-    <property object="PORTIO" propertyId="portio.usart0.enable.rx" value="Enabled"/>
-    <property object="PORTIO" propertyId="portio.usart0.enable.tx" value="Enabled"/>
-    <property object="USART0" propertyId="ABModule.selectedRequirement" value="usart%T%SERIAL_API%T%serial_api_config.h"/>
-    <property object="USART0" propertyId="ABPeripheral.included" value="true"/>
   </mode>
   <modeTransition>
     <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.source" value="RESET"/>

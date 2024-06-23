@@ -190,10 +190,10 @@ def main():
 
     if "zwave_version" in gbl_dynamic:
         gbl_dynamic.remove("zwave_version")
-        zwave_esf_props = parse_properties_file(
-            (gsdk_path / "protocol/z-wave/esf.properties").read_text()
+        zwave_props = parse_properties_file(
+            next((gsdk_path / "protocol/z-wave/").glob("*.properties")).read_text()
         )
-        metadata["zwave_version"] = zwave_esf_props["version"][0]
+        metadata["zwave_version"] = zwave_props["version"][0]
 
     if "ot_rcp_version" in gbl_dynamic:
         gbl_dynamic.remove("ot_rcp_version")

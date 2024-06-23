@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include PLATFORM_HEADER
-#include "ember.h"
+#include "sl_zigbee.h"
 
 //----------------------
 // Implemented Callbacks

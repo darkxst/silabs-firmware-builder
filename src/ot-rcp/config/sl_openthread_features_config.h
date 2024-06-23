@@ -1,3 +1,33 @@
+/***************************************************************************//**
+ * @file
+ * @brief OpenThread stack configuration file.
+ *******************************************************************************
+ * # License
+ * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ *******************************************************************************
+ *
+ * SPDX-License-Identifier: Zlib
+ *
+ * The licensor of this software is Silicon Laboratories Inc.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
+ ******************************************************************************/
+
 #ifndef _SL_OPENTHREAD_FEATURES_CONFIG_H
 #define _SL_OPENTHREAD_FEATURES_CONFIG_H
 //-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
@@ -9,7 +39,7 @@
 //      <OT_THREAD_VERSION_1_1=> Thread 1.1
 //      <OT_THREAD_VERSION_1_2=> Thread 1.2
 //      <OT_THREAD_VERSION_1_3=> Thread 1.3
-// <i>  Thread 1.2 and Thread 1.3 are compatible with Thread 1.1.
+//      <OT_THREAD_VERSION_1_4=> Thread 1.4
 // <i>  Current Default: OT_THREAD_VERSION_1_3
 #ifndef OPENTHREAD_CONFIG_THREAD_VERSION
 #define OPENTHREAD_CONFIG_THREAD_VERSION OT_THREAD_VERSION_1_3
@@ -60,32 +90,41 @@
 #ifndef OPENTHREAD_CONFIG_MLR_ENABLE
 #define OPENTHREAD_CONFIG_MLR_ENABLE                1
 #endif
-// <q>  DNS Client (Thread 1.3)
+// </h>
+#endif // OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2
+
+#if (OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_3)
+// <h>  The following features require at least Thread Stack Protocol Version 1.3
+// <q>  DNS Client
 #ifndef OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE
 #define OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE         1
 #endif
-// <q>  DNS-SD Server (Thread 1.3)
+// <q>  DNS-SD Server
 #ifndef OPENTHREAD_CONFIG_DNSSD_SERVER_ENABLE
 #define OPENTHREAD_CONFIG_DNSSD_SERVER_ENABLE       0
 #endif
-// <q>  Service Registration Protocol (SRP) Client (Thread 1.3)
+// <q>  Service Registration Protocol (SRP) Client
 #ifndef OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE
 #define OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE         1
 #endif
-// <q>  Service Registration Protocol (SRP) Server (Thread 1.3)
+// <q>  Service Registration Protocol (SRP) Server
 #ifndef OPENTHREAD_CONFIG_SRP_SERVER_ENABLE
 #define OPENTHREAD_CONFIG_SRP_SERVER_ENABLE         0
 #endif
-// <q>  TCPlp (Low power TCP over OpenThread) (Thread 1.3)
+// <q>  TCPlp (Low power TCP over OpenThread)
 #ifndef OPENTHREAD_CONFIG_TCP_ENABLE
 #define OPENTHREAD_CONFIG_TCP_ENABLE                0
 #endif
-// <q> Thread over Infrastructure (Thread 1.3: NCP only)
+// <q>  DNS Client over TCP
+#ifndef OPENTHREAD_CONFIG_DNS_CLIENT_OVER_TCP_ENABLE
+#define OPENTHREAD_CONFIG_DNS_CLIENT_OVER_TCP_ENABLE 0
+#endif
+// <q> Thread over Infrastructure (NCP only)
 #ifndef OPENTHREAD_CONFIG_RADIO_LINK_TREL_ENABLE
 #define OPENTHREAD_CONFIG_RADIO_LINK_TREL_ENABLE 0
 #endif
 // </h>
-#endif // OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2
+#endif // OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_3
 
 // <e>  Border Agent
 #ifndef OPENTHREAD_CONFIG_BORDER_AGENT_ENABLE
@@ -211,6 +250,21 @@
 #define OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE      0
 #endif
 // </e>
+// <e>  Multiple Static Instance Support
+#ifndef OPENTHREAD_CONFIG_MULTIPLE_STATIC_INSTANCE_ENABLE
+#define OPENTHREAD_CONFIG_MULTIPLE_STATIC_INSTANCE_ENABLE      0
+#endif
+// </e>
+// <e>  Number of OpenThread Instances For Static Buffer Allocation
+#ifndef OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_NUM
+#define OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_NUM      2
+#endif
+// </e>
+// <e>  Define broadcast IID for spinel frames dedicated to all hosts in multipan configuration
+#ifndef OPENTHREAD_SPINEL_CONFIG_BROADCAST_IID
+#define OPENTHREAD_SPINEL_CONFIG_BROADCAST_IID      0
+#endif
+// </e>
 // <e>  OTNS (OpenThread Network Simulator)
 #ifndef OPENTHREAD_CONFIG_OTNS_ENABLE
 #define OPENTHREAD_CONFIG_OTNS_ENABLE               0
@@ -220,6 +274,13 @@
 #ifndef OPENTHREAD_CONFIG_PING_SENDER_ENABLE
 #define OPENTHREAD_CONFIG_PING_SENDER_ENABLE        1
 #endif
+
+// </e>
+// <e>  Power Calibration Module  (RCP only configuration)
+#ifndef OPENTHREAD_CONFIG_POWER_CALIBRATION_ENABLE
+#define OPENTHREAD_CONFIG_POWER_CALIBRATION_ENABLE  0
+#endif
+
 // </e>
 // <e>  Platform UDP
 #ifndef OPENTHREAD_CONFIG_PLATFORM_UDP_ENABLE
@@ -269,6 +330,21 @@
 #define OPENTHREAD_CONFIG_MAC_BEACON_PAYLOAD_PARSING_ENABLE      1
 #endif
 // </e>
+// <e>  Max raw power calibration length.
+#ifndef SL_OPENTHREAD_RAW_POWER_CALIBRATION_LENGTH
+#define SL_OPENTHREAD_RAW_POWER_CALIBRATION_LENGTH  4
+#endif
+// </e>
+// <e>  Max FEM config setting length.
+#ifndef SL_OPENTHREAD_FEM_SETTING_LENGTH
+#define SL_OPENTHREAD_FEM_SETTING_LENGTH            4
+#endif
+// </e>
+// <i> The maximum number of RX buffers to use in the radio driver.
+// <d> 16
+#ifndef SL_OPENTHREAD_RADIO_RX_BUFFER_COUNT
+#define SL_OPENTHREAD_RADIO_RX_BUFFER_COUNT       16
+#endif
 // </h>
 // <h>  Logging
 // <o   OPENTHREAD_CONFIG_LOG_OUTPUT> LOG_OUTPUT
@@ -318,7 +394,14 @@
 #define OPENTHREAD_CONFIG_LOG_PREPEND_LEVEL         1
 #endif
 
+#endif // OPENTHREAD_FULL_LOGS_ENABLE
+
+// <e> Log crash dump after initialization
+#ifndef OPENTHREAD_CONFIG_PLATFORM_LOG_CRASH_DUMP_ENABLE
+#define OPENTHREAD_CONFIG_PLATFORM_LOG_CRASH_DUMP_ENABLE 0
 #endif
+// </e>
+
 // </h>
 // </e>
 // </h>

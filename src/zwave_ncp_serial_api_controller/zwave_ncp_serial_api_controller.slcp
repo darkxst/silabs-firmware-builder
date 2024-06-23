@@ -15,6 +15,7 @@ package: Z-Wave
 quality: production
 readme:
 - {path: README.md}
+- {path: README.md}
 source:
 - {path: app_node_info.c}
 - {path: cmd_handlers_invoker.c}
@@ -34,7 +35,7 @@ source:
 - {path: main.c}
 tag: [prebuilt_demo]
 include:
-- path: ''
+- path: .
   file_list:
   - {path: app_node_info.h}
   - {path: cmd_handlers.h}
@@ -46,16 +47,18 @@ include:
   - {path: nvm_backup_restore.h}
   - {path: serialapi_file.h}
   - {path: app.h}
+  - {path: common_supported_func.h}
   - {path: slave_supported_func.h}
   - {path: utils.h}
   - {path: virtual_slave_node_info.h}
+  - {path: SerialAPI.h}
   - {path: zaf_config_security.h}
-sdk: {id: gecko_sdk, version: 4.4.2}
+sdk: {id: simplicity_sdk, version: 2024.6.0}
 toolchain_settings: []
 component:
-- {id: ZGM130S037HGN}
+- {id: ZGM230SB27HGN}
 - {id: ZW_MIGRATION_FROM_7_20}
-- {id: brd4207a}
+- {id: brd2603a}
 - {id: device_init}
 - {id: emlib_letimer}
 - {id: emlib_msc}
@@ -65,7 +68,6 @@ component:
 - {id: sl_system}
 - {id: zaf_ncp}
 - {id: zw_api_controller}
-- {id: zw_api_serialapi}
 - {id: zw_api_zw}
 - {id: zw_app_timer_deep_sleep}
 - {id: zw_appshw_serialapi}
@@ -77,18 +79,13 @@ other_file:
 - {path: postbuild.sh}
 define:
 - {name: APP_PROPERTIES_CONFIG_FILE, value: <application_properties_config.h>}
-- condition: [device_sdid_95]
-  name: MAX_CALLBACK_QUEUE
-  value: '4'
-- condition: [device_sdid_95]
-  name: MAX_UNSOLICITED_QUEUE
-  value: '4'
 config_file:
 - {path: config/zaf_config.h}
-- {path: config/zaf_config.h}
+template_contribution:
+- {name: rodata_sections, priority: 0, value: zw_cmd_handlers}
 configuration:
-- {name: ZAF_CONFIG_GENERIC_TYPE, value: '0'}
-- {name: ZAF_CONFIG_SPECIFIC_TYPE, value: '0'}
+- {name: ZAF_CONFIG_GENERIC_TYPE, value: GENERIC_TYPE_STATIC_CONTROLLER}
+- {name: ZAF_CONFIG_SPECIFIC_TYPE, value: SPECIFIC_TYPE_PC_CONTROLLER}
 - {name: ZAF_CONFIG_PRODUCT_ID, value: '4'}
 - {name: NVM3_DEFAULT_MAX_OBJECT_SIZE, value: '1900'}
 - {name: NVM3_DEFAULT_CACHE_SIZE, value: '100'}
@@ -102,12 +99,6 @@ configuration:
 - {name: SL_IOSTREAM_EUSART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION, value: '0'}
 - {name: configUSE_IDLE_HOOK, value: '1'}
 - {name: configTIMER_TASK_PRIORITY, value: '55'}
-- condition: [device_series_1]
-  name: configMAX_SYSCALL_INTERRUPT_PRIORITY
-  value: '32'
-- condition: [device_series_1]
-  name: configKERNEL_INTERRUPT_PRIORITY
-  value: '224'
 - condition: [device_series_2]
   name: configMAX_SYSCALL_INTERRUPT_PRIORITY
   value: '16'
@@ -125,18 +116,7 @@ configuration:
 - condition: [device_series_2]
   name: SL_SLEEPTIMER_PERIPHERAL
   value: SL_SLEEPTIMER_PERIPHERAL_BURTC
-- condition: [device_sdid_95]
-  name: configTIMER_QUEUE_LENGTH
-  value: '4'
-- condition: [device_sdid_95]
-  name: configTOTAL_HEAP_SIZE
-  value: '0'
-- condition: [device_sdid_95]
-  name: SL_STACK_SIZE
-  value: '1024'
-- unless: [device_sdid_95]
-  name: SL_STACK_SIZE
-  value: '1280'
+- {name: SL_STACK_SIZE, value: '1280'}
 - {name: SL_HEAP_SIZE, value: '128'}
 - {name: ZAF_CONFIG_INSTALLER_ICON_TYPE, value: '0'}
 - {name: ZAF_APP_NAME, value: '"serial_api_controller"'}
@@ -144,4 +124,3 @@ configuration:
 ui_hints:
   highlight:
   - {path: README.md, focus: true}
-

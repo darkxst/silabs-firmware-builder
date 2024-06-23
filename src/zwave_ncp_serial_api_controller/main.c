@@ -14,7 +14,6 @@
  * sections of the MSLA applicable to Source Code.
  *
  ******************************************************************************/
-#include "sl_component_catalog.h"
 #include "sl_system_init.h"
 #include "sl_system_kernel.h"
 

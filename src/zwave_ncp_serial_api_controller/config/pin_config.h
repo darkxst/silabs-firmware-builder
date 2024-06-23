@@ -1,106 +1,62 @@
 #ifndef PIN_CONFIG_H
 #define PIN_CONFIG_H
 
-// $[ACMP0]
-// [ACMP0]$
-
-// $[ACMP1]
-// [ACMP1]$
-
-// $[ADC0]
-// [ADC0]$
-
 // $[CMU]
 // [CMU]$
-
-// $[CSEN]
-// [CSEN]$
-
-// $[DBG]
-// DBG SWV on PF2
-#ifndef DBG_SWV_PORT                            
-#define DBG_SWV_PORT                             gpioPortF
-#endif
-#ifndef DBG_SWV_PIN                             
-#define DBG_SWV_PIN                              2
-#endif
-#ifndef DBG_SWV_LOC                             
-#define DBG_SWV_LOC                              0
-#endif
-
-// [DBG]$
-
-// $[ETM]
-// [ETM]$
-
-// $[PTI]
-// [PTI]$
-
-// $[GPIO]
-// [GPIO]$
-
-// $[I2C0]
-// [I2C0]$
-
-// $[I2C1]
-// [I2C1]$
-
-// $[IDAC0]
-// [IDAC0]$
-
-// $[LESENSE]
-// [LESENSE]$
-
-// $[LETIMER0]
-// [LETIMER0]$
-
-// $[LEUART0]
-// [LEUART0]$
 
 // $[LFXO]
 // [LFXO]$
 
-// $[MODEM]
-// [MODEM]$
+// $[PRS.ASYNCH0]
+// [PRS.ASYNCH0]$
 
-// $[PCNT0]
-// [PCNT0]$
+// $[PRS.ASYNCH1]
+// [PRS.ASYNCH1]$
 
-// $[PRS.CH0]
-// [PRS.CH0]$
+// $[PRS.ASYNCH2]
+// [PRS.ASYNCH2]$
 
-// $[PRS.CH1]
-// [PRS.CH1]$
+// $[PRS.ASYNCH3]
+// [PRS.ASYNCH3]$
 
-// $[PRS.CH2]
-// [PRS.CH2]$
+// $[PRS.ASYNCH4]
+// [PRS.ASYNCH4]$
 
-// $[PRS.CH3]
-// [PRS.CH3]$
+// $[PRS.ASYNCH5]
+// [PRS.ASYNCH5]$
 
-// $[PRS.CH4]
-// [PRS.CH4]$
+// $[PRS.ASYNCH6]
+// [PRS.ASYNCH6]$
 
-// $[PRS.CH5]
-// [PRS.CH5]$
+// $[PRS.ASYNCH7]
+// [PRS.ASYNCH7]$
 
-// $[PRS.CH6]
-// [PRS.CH6]$
+// $[PRS.ASYNCH8]
+// [PRS.ASYNCH8]$
 
-// $[PRS.CH7]
-// [PRS.CH7]$
+// $[PRS.ASYNCH9]
+// [PRS.ASYNCH9]$
 
-// $[PRS.CH8]
-// [PRS.CH8]$
+// $[PRS.ASYNCH10]
+// [PRS.ASYNCH10]$
 
-// $[PRS.CH9]
-// [PRS.CH9]$
+// $[PRS.ASYNCH11]
+// [PRS.ASYNCH11]$
 
-// $[PRS.CH10]
-// [PRS.CH10]$
+// $[PRS.SYNCH0]
+// [PRS.SYNCH0]$
 
-// $[PRS.CH11]
-// [PRS.CH11]$
+// $[PRS.SYNCH1]
+// [PRS.SYNCH1]$
+
+// $[PRS.SYNCH2]
+// [PRS.SYNCH2]$
+
+// $[PRS.SYNCH3]
+// [PRS.SYNCH3]$
+
+// $[GPIO]
+// [GPIO]$
 
 // $[TIMER0]
 // [TIMER0]$
@@ -108,42 +64,84 @@
 // $[TIMER1]
 // [TIMER1]$
 
+// $[TIMER2]
+// [TIMER2]$
+
+// $[TIMER3]
+// [TIMER3]$
+
+// $[TIMER4]
+// [TIMER4]$
+
 // $[USART0]
-// USART0 RX on PA1
+// USART0 RX on PA09
 #ifndef USART0_RX_PORT                          
 #define USART0_RX_PORT                           gpioPortA
 #endif
 #ifndef USART0_RX_PIN                           
-#define USART0_RX_PIN                            1
-#endif
-#ifndef USART0_RX_LOC                           
-#define USART0_RX_LOC                            0
+#define USART0_RX_PIN                            9
 #endif
 
-// USART0 TX on PA0
+// USART0 TX on PA08
 #ifndef USART0_TX_PORT                          
 #define USART0_TX_PORT                           gpioPortA
 #endif
 #ifndef USART0_TX_PIN                           
-#define USART0_TX_PIN                            0
-#endif
-#ifndef USART0_TX_LOC                           
-#define USART0_TX_LOC                            0
+#define USART0_TX_PIN                            8
 #endif
 
 // [USART0]$
 
-// $[USART1]
-// [USART1]$
+// $[I2C1]
+// [I2C1]$
 
-// $[USART2]
-// [USART2]$
+// $[EUSART1]
+// [EUSART1]$
+
+// $[EUSART2]
+// [EUSART2]$
+
+// $[LCD]
+// [LCD]$
+
+// $[KEYSCAN]
+// [KEYSCAN]$
+
+// $[LETIMER0]
+// [LETIMER0]$
+
+// $[IADC0]
+// [IADC0]$
+
+// $[ACMP0]
+// [ACMP0]$
+
+// $[ACMP1]
+// [ACMP1]$
 
 // $[VDAC0]
 // [VDAC0]$
 
-// $[WTIMER0]
-// [WTIMER0]$
+// $[PCNT0]
+// [PCNT0]$
+
+// $[LESENSE]
+// [LESENSE]$
+
+// $[HFXO0]
+// [HFXO0]$
+
+// $[I2C0]
+// [I2C0]$
+
+// $[EUSART0]
+// [EUSART0]$
+
+// $[PTI]
+// [PTI]$
+
+// $[MODEM]
+// [MODEM]$
 
 // $[CUSTOM_PIN_NAME]
 #ifndef _PORT                                   

@@ -3,6 +3,7 @@
  * @copyright 2022 Silicon Laboratories Inc.
  */
 
+#include <assert.h>
 #include <string.h>
 #include <utils.h>
 #include <app.h>
@@ -26,16 +27,16 @@ uint8_t GetCommandResponse(SZwaveCommandStatusPackage *pCmdStatus, EZwaveCommand
           if (m_pAppTaskHandle  && (0 < uxQueueMessagesWaiting(Queue)))
           {
             /* More elements in queue call xTaskNotify */
-            BaseType_t Status = xTaskNotify(m_pAppTaskHandle, 1 << EAPPLICATIONEVENT_ZWCOMMANDSTATUS, eSetBits);
-            ASSERT(Status == pdPASS); // We probably received a bad Task handle
+            __attribute__((unused)) BaseType_t Status = xTaskNotify(m_pAppTaskHandle, 1 << EAPPLICATIONEVENT_ZWCOMMANDSTATUS, eSetBits);
+            assert(Status == pdPASS); // We probably received a bad Task handle
           }
           return true;
         }
         else
         {
           /* Re-insert none-matching message into Queue */
-          BaseType_t result = xQueueSendToBack(Queue, (uint8_t*)pCmdStatus, 0);
-          ASSERT(pdTRUE == result);
+          __attribute__((unused)) BaseType_t result = xQueueSendToBack(Queue, (uint8_t*)pCmdStatus, 0);
+          assert(pdTRUE == result);
         }
       }
     }
@@ -44,8 +45,8 @@ uint8_t GetCommandResponse(SZwaveCommandStatusPackage *pCmdStatus, EZwaveCommand
   if (m_pAppTaskHandle && (0 < uxQueueMessagesWaiting(Queue)))
   {
     /* Only call xTaskNotify if still elements in queue */
-    BaseType_t Status = xTaskNotify(m_pAppTaskHandle, 1 << EAPPLICATIONEVENT_ZWCOMMANDSTATUS, eSetBits);
-    ASSERT(Status == pdPASS); // We probably received a bad Task handle
+    __attribute__((unused)) BaseType_t Status = xTaskNotify(m_pAppTaskHandle, 1 << EAPPLICATIONEVENT_ZWCOMMANDSTATUS, eSetBits);
+    assert(Status == pdPASS); // We probably received a bad Task handle
   }
   return false;
 }
@@ -56,14 +57,14 @@ uint8_t IsPrimaryController(void)
   SZwaveCommandPackage cmdPackage = {
     .eCommandType = EZWAVECOMMANDTYPE_IS_PRIMARY_CTRL
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   SZwaveCommandStatusPackage cmdStatus = { 0 };
   if (GetCommandResponse(&cmdStatus, EZWAVECOMMANDSTATUS_IS_PRIMARY_CTRL))
   {
     return cmdStatus.Content.IsPrimaryCtrlStatus.result;
   }
-  ASSERT(false);
+  assert(false);
   return 0;
 }
 
@@ -73,14 +74,14 @@ uint8_t GetControllerCapabilities(void)
   SZwaveCommandPackage cmdPackage = {
     .eCommandType = EZWAVECOMMANDTYPE_GET_CONTROLLER_CAPABILITIES
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
-  SZwaveCommandStatusPackage cmdStatus = { 0 };
-  if (GetCommandResponse(&cmdStatus, EZWAVECOMMANDSTATUS_GET_CONTROLLER_CAPABILITIES))
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  SZwaveCommandStatusPackage cmdStatus = { .eStatusType = EZWAVECOMMANDSTATUS_GET_CONTROLLER_CAPABILITIES };
+  if (GetCommandResponse(&cmdStatus, cmdStatus.eStatusType))
   {
     return cmdStatus.Content.GetControllerCapabilitiesStatus.result;
   }
-  ASSERT(false);
+  assert(false);
   return 0;
 }
 
@@ -110,11 +111,11 @@ void GetNodeInfo(uint16_t NodeId, t_ExtNodeInfo* pNodeInfo)
   };
 
   // Put the Command on queue (and dont wait for it, queue must be empty)
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetNodeInfoCommand, 0);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetNodeInfoCommand, 0);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   // Wait for protocol to handle command (it shouldnt take long)
-  SZwaveCommandStatusPackage NodeInfo = { 0 };
-  if (GetCommandResponse(&NodeInfo, EZWAVECOMMANDSTATUS_NODE_INFO))
+  SZwaveCommandStatusPackage NodeInfo = { .eStatusType = EZWAVECOMMANDSTATUS_NODE_INFO};
+  if (GetCommandResponse(&NodeInfo, NodeInfo.eStatusType))
   {
     if (NodeInfo.Content.NodeInfoStatus.NodeId == NodeId)
     {
@@ -122,7 +123,7 @@ void GetNodeInfo(uint16_t NodeId, t_ExtNodeInfo* pNodeInfo)
       return;
     }
   }
-  ASSERT(false);
+  assert(false);
 }
 
 /**
@@ -141,16 +142,16 @@ void Get_included_nodes(uint8_t* node_id_list)
       .eCommandType = EZWAVECOMMANDTYPE_ZW_GET_INCLUDED_NODES};
 
   // Put the Command on queue (and dont wait for it, queue must be empty)
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetIncludedNodesCommand, 0);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetIncludedNodesCommand, 0);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   // Wait for protocol to handle command (it shouldnt take long)
-  SZwaveCommandStatusPackage includedNodes = { 0 };
-  if (GetCommandResponse(&includedNodes, EZWAVECOMMANDSTATUS_ZW_GET_INCLUDED_NODES))
+  SZwaveCommandStatusPackage includedNodes = { .eStatusType = EZWAVECOMMANDSTATUS_ZW_GET_INCLUDED_NODES };
+  if (GetCommandResponse(&includedNodes, includedNodes.eStatusType))
   {
     memcpy(node_id_list, (uint8_t*)includedNodes.Content.GetIncludedNodes.node_id_list, sizeof(NODE_MASK_TYPE));
     return;
   }
-  ASSERT(false);
+  assert(false);
 }
 
 
@@ -171,8 +172,8 @@ void Get_included_lr_nodes(uint8_t* node_id_list)
   };
 
   // Put the Command on queue (and don't wait for it, queue is most likely empty)
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetIncludedNodesCommand, 0);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&GetIncludedNodesCommand, 0);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   // Wait for protocol to handle command (it shouldn't take long)
   SZwaveCommandStatusPackage includedNodes = { 0 };
   if (GetCommandResponse(&includedNodes, EZWAVECOMMANDSTATUS_ZW_GET_INCLUDED_LR_NODES))
@@ -180,7 +181,7 @@ void Get_included_lr_nodes(uint8_t* node_id_list)
     memcpy(node_id_list, (uint8_t*)includedNodes.Content.GetIncludedNodesLR.node_id_list, sizeof(LR_NODE_MASK_TYPE));
     return;
   }
-  ASSERT(false);
+  assert(false);
 }
 
 
@@ -214,8 +215,8 @@ void GetLongRangeChannel(uint8_t * channel_n, uint8_t *auto_channel_config)
   SZwaveCommandPackage cmdPackage = {
     .eCommandType = EZWAVECOMMANDTYPE_ZW_GET_LR_CHANNEL
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   SZwaveCommandStatusPackage cmdStatus = { 0 };
   *auto_channel_config = 0;
   *channel_n = 0;
@@ -225,7 +226,7 @@ void GetLongRangeChannel(uint8_t * channel_n, uint8_t *auto_channel_config)
     *auto_channel_config = cmdStatus.Content.GetLRChannel.result & LR_AUTO_CHANNEL_CONFIG_MASK;
     return;
   }
-  ASSERT(false);
+  assert(false);
 }
 
 bool SetLongRangeChannel(uint8_t channel)
@@ -235,14 +236,14 @@ bool SetLongRangeChannel(uint8_t channel)
     .eCommandType = EZWAVECOMMANDTYPE_ZW_SET_LR_CHANNEL,
     .uCommandParams.SetLRChannel.value = channel
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
   SZwaveCommandStatusPackage cmdStatus = { 0 };
   if (GetCommandResponse(&cmdStatus, EZWAVECOMMANDSTATUS_ZW_SET_LR_CHANNEL))
   {
     return cmdStatus.Content.SetLRChannel.result;
   }
-  ASSERT(false);
+  assert(false);
   return 0;
 
 }
@@ -254,8 +255,8 @@ void SetLongRangeVirtualNodes(uint8_t bitmask)
     .eCommandType = EZWAVECOMMANDTYPE_ZW_SET_LR_VIRTUAL_IDS,
     .uCommandParams.SetLRVirtualNodeIDs.value = bitmask
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
 }
 
 uint8_t GetPTIConfig(void)
@@ -264,14 +265,14 @@ uint8_t GetPTIConfig(void)
   SZwaveCommandPackage cmdPackage = {
     .eCommandType = EZWAVECOMMANDTYPE_ZW_GET_PTI_CONFIG
   };
-  EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
-  ASSERT(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
-  SZwaveCommandStatusPackage cmdStatus;
-  if (GetCommandResponse(&cmdStatus, EZWAVECOMMANDSTATUS_ZW_GET_PTI_CONFIG))
+  __attribute__((unused)) EQueueNotifyingStatus QueueStatus = QueueNotifyingSendToBack(m_pAppHandles->pZwCommandQueue, (uint8_t *)&cmdPackage, 500);
+  assert(EQUEUENOTIFYING_STATUS_SUCCESS == QueueStatus);
+  SZwaveCommandStatusPackage cmdStatus = { .eStatusType = EZWAVECOMMANDSTATUS_ZW_GET_PTI_CONFIG };
+  if (GetCommandResponse(&cmdStatus, cmdStatus.eStatusType))
   {
     return cmdStatus.Content.GetPTIconfig.result;
   }
-  ASSERT(false);
+  assert(false);
   return 0;
 }
 

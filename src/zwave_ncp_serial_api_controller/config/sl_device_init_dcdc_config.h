@@ -45,13 +45,13 @@
 
 // <q SL_DEVICE_INIT_DCDC_PFMX_IPKVAL_OVERRIDE> Override for DCDC PFMX Mode Peak Current Setting
 // <i>
-// <i> Default: 0
-#define SL_DEVICE_INIT_DCDC_PFMX_IPKVAL_OVERRIDE  0
+// <i> Default: 1
+#define SL_DEVICE_INIT_DCDC_PFMX_IPKVAL_OVERRIDE  1
 
 // <o SL_DEVICE_INIT_DCDC_PFMX_IPKVAL> DCDC PFMX Mode Peak Current Setting <0-15>
 // <i>
 // <i> Default: DCDC_PFMXCTRL_IPKVAL_DEFAULT
-#define SL_DEVICE_INIT_DCDC_PFMX_IPKVAL    DCDC_PFMXCTRL_IPKVAL_DEFAULT
+#define SL_DEVICE_INIT_DCDC_PFMX_IPKVAL    9
 
 // <<< end of configuration section >>>
 

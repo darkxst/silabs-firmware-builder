@@ -1,6 +1,6 @@
 /***************************************************************************//**
  * # License
- * <b> Copyright 2023 Silicon Laboratories Inc. www.silabs.com </b>
+ * <b> Copyright 2024 Silicon Laboratories Inc. www.silabs.com </b>
  *******************************************************************************
  *
  * The licensor of this software is Silicon Laboratories Inc. Your use of this
@@ -33,6 +33,7 @@
 // <REGION_RU=> Russia
 // <REGION_US=> United States
 // <REGION_US_LR=> United States Long Range
+// <REGION_EU_LR=> Europe Long Range
 // <i> Default: REGION_DEFAULT
 #define ZW_REGION  REGION_DEFAULT
 

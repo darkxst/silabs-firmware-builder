@@ -9,7 +9,6 @@
 #include <utils.h>
 #include <ZW_controller_api.h>
 #include <serialapi_file.h>
-#include <ZAF_Common_interface.h>
 #include <zpal_watchdog.h>
 #include <zpal_nvm.h>
 
@@ -37,7 +36,75 @@ offset(LSB)
 buffer[]           buffer only returned for operation=read
 */
 
+
+/* Macro and definitions used to get index of the different fields in NVM backup & restore buffer. */
+#define NVMBACKUP_RX_SUB_CMD_IDX          (0)   /** index of sub command field in rx buffer. */
+#define NVMBACKUP_RX_DATA_LEN_IDX         (1)   /** index of data length field in rx buffer. */
+#define NVMBACKUP_RX_ADDR_IDX             (2)   /** index of address field in rx buffer. */
+/** macro used the get index of the data in NVM Backup Restore received buffer.
+@param size size of the address field.*/
+#define NVMBACKUP_RX_DATA_IDX(size)       (NVMBACKUP_RX_ADDR_IDX + (size))
+
+#define NVMBACKUP_TX_STATUS_IDX           (0)   /** index of command status field in tx buffer. */
+#define NVMBACKUP_TX_DATA_LEN_IDX         (1)   /** index of data length field in tx buffer. */
+#define NVMBACKUP_TX_ADDR_IDX             (2)   /** index of address field in tx buffer. */
+/** macro used to get index of the data in NVM Backup Restore send buffer.
+@param size size of the address field.*/
+#define NVMBACKUP_TX_DATA_IDX(size)       (NVMBACKUP_TX_ADDR_IDX + (size))
+
+#define NVMBACKUP_STATUS_SIZE             (1)  /** size of command status. */
+#define NVMBACKUP_DATA_LEN_SIZE           (1)  /** size of Data length field. */
+
+
 static eNVMBackupRestoreOperation NVMBackupRestoreOperationInProgress = NVMBackupRestoreOperationClose;
+
+/**
+ * This function is used to extract the address from a received frame (on serial API).
+ * This address is extracted depending on the size of the address field (which depend on the command type:
+ * 2 bytes for the legacy NVM_BACKUP_RESTORE, 4bytes for the new NVM_EXT_BACKUP_RESTORE).
+ *
+ * @param pAddr[in] pointer on the first address byte in the rx buffer.
+ * @param addrSize[in] size of the address field (in bytes).
+ *
+ * @return NVM address
+ */
+static uint32_t NvmBackupAddrGet(uint8_t* pAddr, const nvm_backup_restore_addr_size_t addrSize)
+{
+  uint32_t address = 0;
+
+  /* Build the address starting from the most significant byte.
+  For each new byte, shift the address then add the new byte.*/
+  for (uint8_t i = 0; i < addrSize; i++)
+  {
+    address = (address << 8) + *pAddr;
+    pAddr++;
+  }
+
+  return address;
+}
+
+/**
+ * This function is used to fill the address in a frame (on serial API).
+ * This address is set depending on the size of the address field (which depend on the command type:
+ * 2 bytes for the legacy NVM_BACKUP_RESTORE, 4bytes for the new EXT_NVM_BACKUP_RESTORE).
+ *
+ * @param pAddr[in] pointer on the first address byte in the tx buffer.
+ * @param addrSize[in] size of the address field (in bytes).
+ * @param address[in] address to fill in the tx frame
+ */
+static void NvmBackupAddrSet(uint8_t* pAddr, const nvm_backup_restore_addr_size_t addrSize, uint32_t address)
+{
+  int8_t i = 0; //must be signed to avoid infinite loop.
+
+  /*fill the buffer starting from the lowest significant byte.
+  addrSize can be 2 or 4, so there can't be any sign issue with the cast.*/
+  for (i = (int8_t)addrSize-1; i >= 0; i--)
+  {
+    pAddr[i] = address & 0x000000FF;
+    address >>= 8;
+  }
+}
+
 
 /**
  * Must be called to open the backup restore feature
@@ -56,13 +123,11 @@ static bool NvmBackupOpen(void)
   uint8_t bReturn = QueueProtocolCommand((uint8_t*)&nvmOpen);
   if (EQUEUENOTIFYING_STATUS_SUCCESS == bReturn)
   {
-    SZwaveCommandStatusPackage cmdStatus = { 0 };
-    if (GetCommandResponse(&cmdStatus, EZWAVECOMMANDSTATUS_NVM_BACKUP_RESTORE))
+    SZwaveCommandStatusPackage cmdStatus = { .eStatusType = EZWAVECOMMANDSTATUS_NVM_BACKUP_RESTORE};
+    if ((GetCommandResponse(&cmdStatus, cmdStatus.eStatusType))
+        && (cmdStatus.Content.NvmBackupRestoreStatus.status))
     {
-      if (cmdStatus.Content.NvmBackupRestoreStatus.status)
-      {
-        return true;
-      }
+      return true;
     }
   }
   return false;
@@ -153,40 +218,73 @@ static uint8_t NvmBackupRestore( uint32_t offset, uint8_t length, uint8_t* pNvmD
   return false;
 }
 
-void func_id_serial_api_nvm_backup_restore(__attribute__((unused)) uint8_t inputLength, uint8_t *pInputBuffer, uint8_t *pOutputBuffer, uint8_t *pOutputLength)
+bool NvmBackupLegacyCmdAvailable(void)
 {
-  uint32_t NVM_WorkPtr;
+  /* If NVM size is 0x10000, the legacy command should be forbidden. However, for backward
+  compatibility, a controller with exactly 0x10000 bytes of NVM must be able to use it.
+  WARNING: in that case, the legacy NVM backup & restore command will return a size equal to 0. */
+  if (0x10000 < zpal_nvm_backup_get_size())
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
+}
+
+void func_id_serial_api_nvm_backup_restore(__attribute__((unused)) uint8_t inputLength, uint8_t *pInputBuffer, uint8_t *pOutputBuffer, uint8_t *pOutputLength, bool extended)
+{
+  uint32_t NVM_WorkPtr = 0;
   uint8_t dataLength;
   const uint32_t nvm_storage_size = zpal_nvm_backup_get_size();
+  nvm_backup_restore_addr_size_t addrSize;
+
+  //set address size according to the command (legacy or extended backup & restore)
+  if (true == extended)
+  {
+    addrSize = NVM_EXT_BACKUP_RESTORE_ADDR_SIZE;
+  }
+  else
+  {
+    addrSize = NVM_BACKUP_RESTORE_ADDR_SIZE;
+  }
 
   dataLength = 0;                                   /* Assume nothing is read or written */
-  pOutputBuffer[0] = NVMBackupRestoreReturnValueOK; /* Assume not at EOF and no ERROR */
-  pOutputBuffer[1] = 0;                             /* Assume no data */
-  pOutputBuffer[2] = 0;
-  pOutputBuffer[3] = 0;
-  switch (pInputBuffer[0]) /* operation */
+  memset(pOutputBuffer, 0, NVMBACKUP_STATUS_SIZE + NVMBACKUP_DATA_LEN_SIZE + addrSize);
+  pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueOK; /* Assume not at EOF and no ERROR */
+
+  switch (pInputBuffer[NVMBACKUP_RX_SUB_CMD_IDX]) /* operation */
   {
     case NVMBackupRestoreOperationOpen: /* open */
     {
       if (NVMBackupRestoreOperationClose == NVMBackupRestoreOperationInProgress)
       {
-      /* Lock everyone else out from making changes to the NVM content */
-      /* Remember to have some kind of dead-mans-pedal to release lock again. */
-      /* TODO */
-      // here we have to  shut down RF and disable power management and close NVM subsystem
+        /* Lock everyone else out from making changes to the NVM content */
+        /* Remember to have some kind of dead-mans-pedal to release lock again. */
+        /* TODO */
+        // here we have to  shut down RF and disable power management and close NVM subsystem
         if (NvmBackupOpen())
         {
           NVMBackupRestoreOperationInProgress = NVMBackupRestoreOperationOpen;
-          NVM_WorkPtr = 0;
+          /* Set the size of the backup/restore. (Number of bytes in flash used for file systems) */
+          /* Please note that the special case where nvm_storage_size == 0x10000 is indicated by 0x00 0x00 */
+          NvmBackupAddrSet( &(pOutputBuffer[NVMBACKUP_TX_ADDR_IDX]), addrSize, nvm_storage_size);
 
-      /* Set the size of the backup/restore. (Number of bytes in flash used for file systems) */
-      /* Please note that the special case where nvm_storage_size == 0x10000 is indicated by 0x00 0x00 */
-          pOutputBuffer[2] = (uint8_t)(nvm_storage_size >> 8);
-          pOutputBuffer[3] = (uint8_t)nvm_storage_size;
+          /* in case of extended command, set the sub commands capability*/
+          if (true == extended)
+          {
+            pOutputBuffer[NVMBACKUP_TX_DATA_IDX(addrSize) + (dataLength++)] =
+                                      (1 << NVMBackupRestoreOperationOpen) +
+                                      (1 << NVMBackupRestoreOperationRead) +
+                                      (1 << NVMBackupRestoreOperationWrite) +
+                                      (1 << NVMBackupRestoreOperationClose);
+          }
+          pOutputBuffer[NVMBACKUP_TX_DATA_LEN_IDX] = dataLength;
         }
         else
         {
-          pOutputBuffer[0] = NVMBackupRestoreReturnValueError; /*Report error we can't open backup restore feature*/
+          pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueError; /*Report error we can't open backup restore feature*/
         }
       }
     }
@@ -194,54 +292,56 @@ void func_id_serial_api_nvm_backup_restore(__attribute__((unused)) uint8_t input
 
     case NVMBackupRestoreOperationRead: /* read */
     {
-      /* Validate input */
       DPRINT("NVM_Read_ \r\n");
+      /* Check that NVM is ready */
       if ((NVMBackupRestoreOperationInProgress != NVMBackupRestoreOperationRead) &&
           (NVMBackupRestoreOperationInProgress != NVMBackupRestoreOperationOpen))
       {
-    	DPRINT("NVM_Read_Mis \r\n");
-        pOutputBuffer[0] = NVMBackupRestoreReturnValueOperationMismatch;
+        DPRINT("NVM_Read_Mis \r\n");
+        pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueOperationMismatch;
         break;
       }
       NVMBackupRestoreOperationInProgress = NVMBackupRestoreOperationRead;
-      dataLength = pInputBuffer[1]; /* Requested dataLength */
-      NVM_WorkPtr = (((uint32_t)pInputBuffer[2] << 8) + pInputBuffer[3]);
-      /* Make sure that length isn't larger than the available buffer size */
-      if (dataLength > WORK_BUFFER_SIZE)
+      /* Load input */
+      dataLength = pInputBuffer[NVMBACKUP_RX_DATA_LEN_IDX]; /* Requested dataLength */
+      NVM_WorkPtr = NvmBackupAddrGet( &(pInputBuffer[NVMBACKUP_RX_ADDR_IDX]), addrSize);
+      /* Validate Input */
+      if (dataLength > WORK_BUFFER_SIZE)/* Make sure that length isn't larger than the available buffer size */
       {
         dataLength = WORK_BUFFER_SIZE;
       }
-      /* Make sure that we don't go beyond valid NVM content */
-      if ((NVM_WorkPtr + dataLength) >= nvm_storage_size)
+      if ((NVM_WorkPtr + dataLength) >= nvm_storage_size)/* Make sure that we don't go beyond valid NVM content */
       {
-    	DPRINT("NVM_Read_EOF \r\n");
+        DPRINT("NVM_Read_EOF \r\n");
         dataLength = (uint8_t)(nvm_storage_size - NVM_WorkPtr);
-        pOutputBuffer[0] = (uint8_t)NVMBackupRestoreReturnValueEOF; /* Indicate at EOF */
+        pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = (uint8_t)NVMBackupRestoreReturnValueEOF; /* Indicate at EOF */
       }
-      pOutputBuffer[1] = dataLength;
-      pOutputBuffer[2] = pInputBuffer[2];
-      pOutputBuffer[3] = pInputBuffer[3];
-      NvmBackupRead(NVM_WorkPtr, dataLength, &pOutputBuffer[4]);
+      /* fill output buffer */
+      pOutputBuffer[NVMBACKUP_TX_DATA_LEN_IDX] = dataLength;
+      NvmBackupAddrSet( &(pOutputBuffer[NVMBACKUP_TX_ADDR_IDX]), addrSize, NVM_WorkPtr);
+      NvmBackupRead(NVM_WorkPtr, dataLength, &pOutputBuffer[NVMBACKUP_TX_DATA_IDX(addrSize)]);
     }
     break;
 
     case NVMBackupRestoreOperationWrite: /* write */
     {
-      /* Validate input */
+      /* Check that NVM is ready */
       if ((NVMBackupRestoreOperationInProgress != NVMBackupRestoreOperationWrite) &&
           (NVMBackupRestoreOperationInProgress != NVMBackupRestoreOperationOpen))
       {
         DPRINT("NVM_Write_mis \r\n");
-        pOutputBuffer[0] = NVMBackupRestoreReturnValueOperationMismatch;
+        pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueOperationMismatch;
         break;
       }
       NVMBackupRestoreOperationInProgress = NVMBackupRestoreOperationWrite;
-      dataLength = pInputBuffer[1]; /* Requested dataLength */
-      NVM_WorkPtr = (uint32_t)(((uint16_t)pInputBuffer[2] << 8) + pInputBuffer[3]);
+      /* Load input */
+      dataLength = pInputBuffer[NVMBACKUP_RX_DATA_LEN_IDX]; /* Requested dataLength */
+      NVM_WorkPtr = NvmBackupAddrGet( &(pInputBuffer[NVMBACKUP_RX_ADDR_IDX]), addrSize);
+      /* Validate input */
       if (dataLength > WORK_BUFFER_SIZE)
       {
         DPRINT("NVM_Write_buff_err \r\n");
-        pOutputBuffer[0] = NVMBackupRestoreReturnValueError; /* ERROR: ignore request if length is larger than available buffer */
+        pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueError; /* ERROR: ignore request if length is larger than available buffer */
       }
       else
       {
@@ -251,15 +351,17 @@ void func_id_serial_api_nvm_backup_restore(__attribute__((unused)) uint8_t input
         {
           DPRINT("NVM_Write_EOF \r\n");
           dataLength = (uint8_t)(nvm_storage_size - NVM_WorkPtr);
-          pOutputBuffer[0] = (uint8_t)NVMBackupRestoreReturnValueEOF; /* Indicate at EOF */
+          pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = (uint8_t)NVMBackupRestoreReturnValueEOF; /* Indicate at EOF */
         }
-        memcpy(tmp_buf, (uint8_t*)&pInputBuffer[4], dataLength);
+        /* copy data into another buffer because write operation will be done in another task. */
+        memcpy(tmp_buf, (uint8_t*)&pInputBuffer[NVMBACKUP_RX_DATA_IDX(addrSize)], dataLength);
         NvmBackupRestore(NVM_WorkPtr , dataLength, tmp_buf);
-        pOutputBuffer[1] = dataLength; /* Data written */
-        pOutputBuffer[2] = pInputBuffer[2];
-        pOutputBuffer[3] = pInputBuffer[3];
+        /* fill output buffer */
+        pOutputBuffer[NVMBACKUP_TX_DATA_LEN_IDX] = dataLength;
+        NvmBackupAddrSet( &(pOutputBuffer[NVMBACKUP_TX_ADDR_IDX]), addrSize, NVM_WorkPtr);
 
       }
+      /* reset data length because there is no data in output buffer. */
       dataLength = 0;
     }
     break;
@@ -279,14 +381,15 @@ void func_id_serial_api_nvm_backup_restore(__attribute__((unused)) uint8_t input
       }
       else
       {
-        pOutputBuffer[0] = NVMBackupRestoreReturnValueError; /*repoert error we canot close backup restore feature*/
+        pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueError; /*report error we canot close backup restore feature*/
       }
     }
     break;
 
     default:
+      pOutputBuffer[NVMBACKUP_TX_STATUS_IDX] = NVMBackupRestoreReturnValueError;
     break;
   }
-  *pOutputLength = dataLength + 4;
-
+  //build output buffer length
+  *pOutputLength = (uint8_t)(NVMBACKUP_STATUS_SIZE + NVMBACKUP_DATA_LEN_SIZE + addrSize + dataLength);
 }

@@ -1,9 +1,9 @@
 /***************************************************************************//**
  * @file
- * @brief DEVICE_INIT_EMU Config
+ * @brief sl_core Configuration
  *******************************************************************************
  * # License
- * <b>Copyright 2019 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2023 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,26 +28,17 @@
  *
  ******************************************************************************/
 
-#ifndef SL_DEVICE_INIT_EMU_CONFIG_H
-#define SL_DEVICE_INIT_EMU_CONFIG_H
-
-#include "em_emu.h"
+#ifndef SL_CORE_CONFIG_H
+#define SL_CORE_CONFIG_H
 
 // <<< Use Configuration Wizard in Context Menu >>>
 
-// <q> Allow debugger to remain connected in EM2
-// <i> Force PD0B to stay on on EM2 entry. This allows the debugger to remain connected in EM2 and EM3.
-// <i> Enabling debug connectivity results in an increased power consumption in EM2/EM3.
-// <i> Default: 1
-#define SL_DEVICE_INIT_EMU_EM2_DEBUG_ENABLE   1
+// <h> Core Abstraction Configuration
 
-// <o SL_DEVICE_INIT_EMU_EM4_PIN_RETENTION_MODE> EM4 pin retention mode
-// <emuPinRetentionDisable=> No Retention: Pads enter reset state when entering EM4.
-// <emuPinRetentionEm4Exit=> Retention through EM4: Pads enter reset state when exiting EM4.
-// <emuPinRetentionLatch=> Retention through EM4 and wakeup.
-// <i> Default: emuPinRetentionDisable
-#define SL_DEVICE_INIT_EMU_EM4_PIN_RETENTION_MODE  emuPinRetentionDisable
+// <q SL_CORE_DEBUG_INTERRUPTS_MASKED_TIMING> Enables measurement of interrupt masking time for debugging purposes.
+// <i> Default: 0
+#define SL_CORE_DEBUG_INTERRUPTS_MASKED_TIMING    0
+// </h>
 
 // <<< end of configuration section >>>
-
-#endif // SL_DEVICE_INIT_EMU_CONFIG_H
+#endif // SL_CORE_CONFIG_H

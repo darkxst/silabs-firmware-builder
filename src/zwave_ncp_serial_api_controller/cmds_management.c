@@ -2,7 +2,7 @@
  * @file cmds_management.c
  * @copyright 2022 Silicon Laboratories Inc.
  */
-
+#include <assert.h>
 #include <app.h>
 #include <cmds_management.h>
 #include <ZW_application_transport_interface.h>
@@ -11,12 +11,12 @@
 #include <serialapi_file.h>
 #include <ZAF_Common_interface.h>
 #include <ZAF_types.h>
+#include <ZAF_version.h>
 #include <string.h>
 #include <zpal_misc.h>
 
 //#define DEBUGPRINT
 #include <DebugPrint.h>
-#include "zw_build_no.h"
 
 #ifdef ZW_CONTROLLER
 #include <ZW_controller_api.h>
@@ -76,7 +76,7 @@ void func_id_serial_api_get_init_data(__attribute__((unused)) uint8_t inputLengt
   BYTE_IN_AR(pOutputBuffer, 3 + (ZW_MAX_NODES / 8)) = zpal_get_chip_type();
   BYTE_IN_AR(pOutputBuffer, 4 + (ZW_MAX_NODES / 8)) = zpal_get_chip_revision();
   *pOutputLength += (ZW_MAX_NODES / 8);
-  ASSERT(*pOutputLength <= 34);  // Elsewhere, like in zwapi_init.c, the pOutputBuffer is hardcoded to 34 bytes in lenght.
+  assert(*pOutputLength <= 34);  // Elsewhere, like in zwapi_init.c, the pOutputBuffer is hardcoded to 34 bytes in lenght.
 #else
   BYTE_IN_AR(pOutputBuffer, 1) |= GET_INIT_DATA_FLAG_SLAVE_API; /* Flag byte */
   BYTE_IN_AR(pOutputBuffer, 2) = 0;                             /* node bitmask length */
@@ -99,7 +99,7 @@ void func_id_serial_api_get_LR_nodes(__attribute__((unused)) uint8_t inputLength
    * This Assert is here to remind us to update this function, if in the future the number of supported nodes increases.
    * In which case the MAX_LR_NODEMASK_LENGTH define will become greater than 128
    */
-  STATIC_ASSERT(MAX_LR_NODEMASK_LENGTH <= 128, STATIC_ASSERT_MAX_LR_NODEMASK_LENGTH_to_big);
+  _Static_assert(MAX_LR_NODEMASK_LENGTH <= 128, "STATIC_ASSERT_MAX_LR_NODEMASK_LENGTH_to_big");
 
   uint8_t bitmaskOffset = pInputBuffer[0];
   *pOutputLength = 3 + MAX_LR_NODEMASK_LENGTH;
@@ -152,7 +152,8 @@ void func_id_serial_api_setup(uint8_t inputLength,
   uint8_t i=0;
   uint8_t cmdRes;
   zpal_radio_region_t rfRegion;
-  zpal_tx_power_t iPowerLevel, iPower0dbmMeasured;
+  zpal_tx_power_t iPowerLevel = 0;
+  zpal_tx_power_t iPower0dbmMeasured = 0;
 
   /* We assume operation is nonesuccessful */
   cmdRes = false;
@@ -244,7 +245,7 @@ void func_id_serial_api_setup(uint8_t inputLength,
     {
       rfRegion = pInputBuffer[1];
       /* Check if the RF Region value is valid, and then store it in flash  */
-      if ((rfRegion <= REGION_US_LR) || (rfRegion == REGION_JP) || (rfRegion == REGION_KR))
+      if (true == isRfRegionValid(rfRegion))
       {
         /* Save into nvm */
         cmdRes = SaveApplicationRfRegion(rfRegion);
@@ -255,7 +256,8 @@ void func_id_serial_api_setup(uint8_t inputLength,
 
   case SERIAL_API_SETUP_CMD_TX_POWERLEVEL_SET:
   {
-    zpal_tx_power_t iTxPower, iAdjust;
+    zpal_tx_power_t iTxPower;
+    zpal_tx_power_t iAdjust;
     /**
      *  HOST->ZW: SERIAL_API_SETUP_CMD_TX_POWER_SET | NormalTxPowerLevel | Measured0dBmPower
      *  ZW->HOST: SERIAL_API_SETUP_CMD_TX_POWER_SET | cmdRes
@@ -308,7 +310,8 @@ void func_id_serial_api_setup(uint8_t inputLength,
 
   case SERIAL_API_SETUP_CMD_TX_POWERLEVEL_SET_16_BIT:
   {
-    zpal_tx_power_t iTxPower, iAdjust;
+    zpal_tx_power_t iTxPower;
+    zpal_tx_power_t iAdjust;
     zpal_tx_power_t iTxPowerMaxSupported;
     /**
      *  HOST->ZW: SERIAL_API_SETUP_CMD_TX_POWER_SET | NormalTxPowerLevel (MSB) |NormalTxPowerLevel (LSB) | Measured0dBmPower (MSB)| Measured0dBmPower (LSB)
@@ -407,7 +410,7 @@ void func_id_serial_api_setup(uint8_t inputLength,
      *  ZW->HOST: SERIAL_API_SETUP_CMD_MAX_LR_TX_PWR_GET | maxtxpower (16-bit)
      */
     {
-      int16_t readout;
+      int16_t readout = 0;
       ReadApplicationMaxLRTxPwr(&readout);
       BYTE_IN_AR(pOutputBuffer, i++) = (uint8_t)((readout >> 8) & 0xFF);
       BYTE_IN_AR(pOutputBuffer, i++) = (uint8_t)(readout & 0xFF);
@@ -474,19 +477,15 @@ void func_id_zw_get_protocol_version(uint8_t inputLength,
   // Defined in the specs to be the max size of the git hash
   const uint8_t git_hash_max_size = 16;
   uint8_t len = 0;
-#if defined(GIT_HASH_ID)
-  uint8_t git_hash_id[40] = GIT_HASH_ID;
-#else /* defined(GIT_HASH_ID) */
-  uint8_t *git_hash_id = ZW_GetProtocolGitHash();
-#endif /* defined(GIT_HASH_ID) */
+  const uint8_t *git_hash_id = ZW_GetProtocolGitHash();
 
   const SApplicationHandles *pAppHandles = ZAF_getAppHandle();
   pOutputBuffer[len++] = pAppHandles->pProtocolInfo->eProtocolType;
   pOutputBuffer[len++] = pAppHandles->pProtocolInfo->ProtocolVersion.Major;
   pOutputBuffer[len++] = pAppHandles->pProtocolInfo->ProtocolVersion.Minor;
   pOutputBuffer[len++] = pAppHandles->pProtocolInfo->ProtocolVersion.Revision;
-  pOutputBuffer[len++] =  (uint8_t)(ZAF_BUILD_NO >> 8);
-  pOutputBuffer[len++] =  (uint8_t)(ZAF_BUILD_NO );
+  pOutputBuffer[len++] =  (uint8_t)(ZAF_GetBuildNumber() >> 8);
+  pOutputBuffer[len++] =  (uint8_t)(ZAF_GetBuildNumber() );
   for (uint32_t i = 0 ; i < git_hash_max_size; i++,len++)
   {
     pOutputBuffer[len] = git_hash_id[i];
@@ -505,8 +504,8 @@ bool InitiateShutdown( ZW_Void_Callback_t pCallback)
   if (EQUEUENOTIFYING_STATUS_SUCCESS == QueueNotifyingSendToBack(pAppHandles->pZwCommandQueue, (uint8_t *)&shutdown, 0))
   {
     // Wait for protocol to handle command
-    SZwaveCommandStatusPackage result = { 0 };
-    if (GetCommandResponse(&result, EZWAVECOMMANDSTATUS_ZW_INITIATE_SHUTDOWN))
+    SZwaveCommandStatusPackage result = { .eStatusType = EZWAVECOMMANDSTATUS_ZW_INITIATE_SHUTDOWN };
+    if (GetCommandResponse(&result, result.eStatusType))
     {
       return result.Content.InitiateShutdownStatus.result;
     }

@@ -20,17 +20,18 @@ source:
 - {path: app.c}
 tag: [prebuilt_demo]
 include:
-- path: ''
+- path: .
   file_list:
   - {path: app.h}
   - {path: reset_util.h}
-sdk: {id: gecko_sdk, version: 4.4.2}
+sdk: {id: simplicity_sdk, version: 2024.6.0}
 toolchain_settings: []
 component:
 - {id: EFR32MG21A010F1024IM32}
 - {id: bootloader_interface}
 - {id: brd4001a}
 - {id: brd4179b}
+- {id: memory_manager}
 - {id: ot_crash_handler}
 - {id: ot_stack_rcp}
 - {id: rail_util_pti}
@@ -47,12 +48,10 @@ configuration:
 - condition: [ot_rtt_log]
   name: BUFFER_SIZE_UP
   value: '768'
-- condition: [ot_rtt_log, device_family_efr32mg1]
-  name: BUFFER_SIZE_UP
-  value: '128'
 - condition: [ot_rtt_log]
   name: BUFFER_SIZE_DOWN
   value: '0'
+- {name: CIRCULAR_QUEUE_LEN_MAX, value: '16'}
 ui_hints:
   highlight:
   - {path: ./README-OT-RCP.md, focus: true}

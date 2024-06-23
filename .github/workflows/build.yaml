@@ -130,7 +130,7 @@ jobs:
       - name: Install SDK extensions
         run: |
           # XXX: slc-cli does not actually work when the extensions aren't in the SDK!
-          for sdk in /gecko_sdk_*; do
+          for sdk in /*_sdk_*; do
             slc signature trust --sdk "$sdk"
 
             ln -s $PWD/gecko_sdk_extensions "$sdk"/extension
@@ -148,7 +148,7 @@ jobs:
 
           # Pass all SDKs as consecutive `--sdk ...` arguments
           sdk_args=""
-          for sdk_dir in /gecko_sdk*; do
+          for sdk_dir in /*_sdk*; do
             sdk_args="$sdk_args --sdk $sdk_dir"
           done
 

@@ -29,7 +29,7 @@ typedef struct
 }
 cmd_handler_map_t;
 
-#define CMD_HANDLER_SECTION "_cmd_handlers"
+#define CMD_HANDLER_SECTION "zw_cmd_handlers"
 
 #define ZW_ADD_CMD(cmd) \
   static void cmd_handler_fcn_##cmd(__attribute__((unused)) const comm_interface_frame_ptr frame); /* Prototype */ \

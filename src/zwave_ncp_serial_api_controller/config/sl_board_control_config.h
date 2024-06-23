@@ -33,51 +33,83 @@
 
 // <<< Use Configuration Wizard in Context Menu >>>
 
-// <q SL_BOARD_ENABLE_VCOM> Enable Virtual COM UART
-// <i> Default: 0
-#define SL_BOARD_ENABLE_VCOM                    1
-
-// <q SL_BOARD_ENABLE_DISPLAY> Enable Display
-// <i> Default: 0
-#define SL_BOARD_ENABLE_DISPLAY                 0
-
 // <q SL_BOARD_ENABLE_SENSOR_RHT> Enable Relative Humidity and Temperature sensor
 // <i> Default: 0
 #define SL_BOARD_ENABLE_SENSOR_RHT              0
+
+// <q SL_BOARD_ENABLE_SENSOR_HALL> Enable Hall Effect sensor
+// <i> Default: 0
+#define SL_BOARD_ENABLE_SENSOR_HALL             0
+
+// <q SL_BOARD_ENABLE_SENSOR_PRESSURE> Enable Barometric Pressure sensor
+// <i> Default: 0
+#define SL_BOARD_ENABLE_SENSOR_PRESSURE         0
+
+// <q SL_BOARD_ENABLE_SENSOR_LIGHT> Enable Light sensor
+// <i> Default: 0
+#define SL_BOARD_ENABLE_SENSOR_LIGHT            0
+
+// <q SL_BOARD_ENABLE_SENSOR_IMU> Enable Inertial Measurement Unit
+// <i> Default: 0
+#define SL_BOARD_ENABLE_SENSOR_IMU              0
+
+// <q SL_BOARD_DISABLE_MEMORY_SPI> Disable SPI Flash
+// <i> Default: 1
+#define SL_BOARD_DISABLE_MEMORY_SPI             1
 
 // <<< end of configuration section >>>
 
 // <<< sl:start pin_tool >>>
 
-// <gpio> SL_BOARD_ENABLE_VCOM
-// $[GPIO_SL_BOARD_ENABLE_VCOM]
-#ifndef SL_BOARD_ENABLE_VCOM_PORT               
-#define SL_BOARD_ENABLE_VCOM_PORT                gpioPortA
-#endif
-#ifndef SL_BOARD_ENABLE_VCOM_PIN                
-#define SL_BOARD_ENABLE_VCOM_PIN                 5
-#endif
-// [GPIO_SL_BOARD_ENABLE_VCOM]$
-
-// <gpio> SL_BOARD_ENABLE_DISPLAY
-// $[GPIO_SL_BOARD_ENABLE_DISPLAY]
-#ifndef SL_BOARD_ENABLE_DISPLAY_PORT            
-#define SL_BOARD_ENABLE_DISPLAY_PORT             gpioPortD
-#endif
-#ifndef SL_BOARD_ENABLE_DISPLAY_PIN             
-#define SL_BOARD_ENABLE_DISPLAY_PIN              15
-#endif
-// [GPIO_SL_BOARD_ENABLE_DISPLAY]$
-
 // <gpio> SL_BOARD_ENABLE_SENSOR_RHT
 // $[GPIO_SL_BOARD_ENABLE_SENSOR_RHT]
 #ifndef SL_BOARD_ENABLE_SENSOR_RHT_PORT         
-#define SL_BOARD_ENABLE_SENSOR_RHT_PORT          gpioPortD
+#define SL_BOARD_ENABLE_SENSOR_RHT_PORT          gpioPortC
 #endif
 #ifndef SL_BOARD_ENABLE_SENSOR_RHT_PIN          
-#define SL_BOARD_ENABLE_SENSOR_RHT_PIN           15
+#define SL_BOARD_ENABLE_SENSOR_RHT_PIN           7
 #endif
 // [GPIO_SL_BOARD_ENABLE_SENSOR_RHT]$
+
+// <gpio> SL_BOARD_ENABLE_SENSOR_HALL
+// $[GPIO_SL_BOARD_ENABLE_SENSOR_HALL]
+#ifndef SL_BOARD_ENABLE_SENSOR_HALL_PORT        
+#define SL_BOARD_ENABLE_SENSOR_HALL_PORT         gpioPortC
+#endif
+#ifndef SL_BOARD_ENABLE_SENSOR_HALL_PIN         
+#define SL_BOARD_ENABLE_SENSOR_HALL_PIN          7
+#endif
+// [GPIO_SL_BOARD_ENABLE_SENSOR_HALL]$
+
+// <gpio> SL_BOARD_ENABLE_SENSOR_PRESSURE
+// $[GPIO_SL_BOARD_ENABLE_SENSOR_PRESSURE]
+#ifndef SL_BOARD_ENABLE_SENSOR_PRESSURE_PORT    
+#define SL_BOARD_ENABLE_SENSOR_PRESSURE_PORT     gpioPortC
+#endif
+#ifndef SL_BOARD_ENABLE_SENSOR_PRESSURE_PIN     
+#define SL_BOARD_ENABLE_SENSOR_PRESSURE_PIN      7
+#endif
+// [GPIO_SL_BOARD_ENABLE_SENSOR_PRESSURE]$
+
+// <gpio> SL_BOARD_ENABLE_SENSOR_LIGHT
+// $[GPIO_SL_BOARD_ENABLE_SENSOR_LIGHT]
+#ifndef SL_BOARD_ENABLE_SENSOR_LIGHT_PORT       
+#define SL_BOARD_ENABLE_SENSOR_LIGHT_PORT        gpioPortC
+#endif
+#ifndef SL_BOARD_ENABLE_SENSOR_LIGHT_PIN        
+#define SL_BOARD_ENABLE_SENSOR_LIGHT_PIN         7
+#endif
+// [GPIO_SL_BOARD_ENABLE_SENSOR_LIGHT]$
+
+// <gpio> SL_BOARD_ENABLE_SENSOR_IMU
+// $[GPIO_SL_BOARD_ENABLE_SENSOR_IMU]
+#ifndef SL_BOARD_ENABLE_SENSOR_IMU_PORT         
+#define SL_BOARD_ENABLE_SENSOR_IMU_PORT          gpioPortD
+#endif
+#ifndef SL_BOARD_ENABLE_SENSOR_IMU_PIN          
+#define SL_BOARD_ENABLE_SENSOR_IMU_PIN           3
+#endif
+// [GPIO_SL_BOARD_ENABLE_SENSOR_IMU]$
 
 // <<< sl:end pin_tool >>>
 

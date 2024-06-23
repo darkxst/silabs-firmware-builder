@@ -3,10 +3,14 @@
  * @copyright 2022 Silicon Laboratories Inc.
  */
 #include <stdint.h>
+
+#include <NodeMask.h>
+
 #include "cmd_handlers.h"
 #include "app.h"
 #include "zaf_config.h"
 #include "zw_version_config.h"
+#include "nvm_backup_restore.h"
 
 #define CAPABILITIES_SIZE (8 + 32) // Info + supported commands
 
@@ -40,6 +44,18 @@ static bool add_cmd_to_capabilities(cmd_handler_map_t const * const p_cmd_entry,
 ZW_ADD_CMD(FUNC_ID_SERIAL_API_GET_CAPABILITIES)
 {
   cmd_foreach(add_cmd_to_capabilities, &SERIALAPI_CAPABILITIES[8]);
+
+#if SUPPORT_NVM_BACKUP_RESTORE
+  //If the legacy NVM backup & restore command cannot be used, it must be removed from available command.
+  if (false == NvmBackupLegacyCmdAvailable())
+  {
+    /*SUPPORT_NVM_BACKUP_RESTORE cannot be set depending on the NVM size, because it is define in
+    the application. However the NVM_SIZE is defined inside the ZPAL. It is available to the
+    application only through the function zpal_nvm_backup_get_size().
+    So this configuration must be done dynamically. */
+    ZW_NodeMaskClearBit(&SERIALAPI_CAPABILITIES[8], FUNC_ID_NVM_BACKUP_RESTORE);
+  }
+#endif
   /* HOST->ZW: no params defined */
   /* ZW->HOST: RES | 0x07 | */
   /*  SERIAL_APPL_VERSION | SERIAL_APPL_REVISION | SERIALAPI_MANUFACTURER_ID1 | SERIALAPI_MANUFACTURER_ID2 | */

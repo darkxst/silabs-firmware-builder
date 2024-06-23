@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
   <descriptors name="ncp-uart-hw">
-    <properties key="projectCommon.sdkId" value="com.silabs.sdk.stack.super:4.4.2._-295637085"/>
+    <properties key="projectCommon.sdkId" value="com.silabs.sdk.stack.sisdk:2024.6.0._125087053"/>
     <properties key="universalConfig.relativeWorkspacePath" value="../ncp-uart-hw.slcw"/>
     <properties key="universalConfig.generationDirectory" value=""/>
     <properties key="universalConfig.toolchainCompatibility" value="iar gcc"/>
@@ -12,5 +12,6 @@
     <properties key="projectCommon.toolchainId" value="com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:12.2.1.20221205"/>
     <properties key="universalConfig.projectTypeIds" value="com.silabs.ss.framework.ide.project.core.cdtMbsProjectType"/>
     <properties key="projectCommon.importModeId" value="LINK_LIBRARIES"/>
+    <properties key="universalConfig.compSelProjInstanceId" value="1718738299605"/>
   </descriptors>
 </model:MDescriptors>

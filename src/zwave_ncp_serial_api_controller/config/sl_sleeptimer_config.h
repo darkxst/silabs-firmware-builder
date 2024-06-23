@@ -52,7 +52,7 @@
 //   <SL_SLEEPTIMER_PERIPHERAL_WTIMER=> WTIMER
 //   <SL_SLEEPTIMER_PERIPHERAL_TIMER=> TIMER
 // <i> Selection of the Timer Peripheral Used by the Sleeptimer
-#define SL_SLEEPTIMER_PERIPHERAL  SL_SLEEPTIMER_PERIPHERAL_DEFAULT
+#define SL_SLEEPTIMER_PERIPHERAL  SL_SLEEPTIMER_PERIPHERAL_BURTC
 
 // <o SL_SLEEPTIMER_TIMER_INSTANCE> TIMER/WTIMER Instance Used by Sleeptimer (not applicable for other peripherals)
 // <i> Make sure TIMER instance size is 32bits. Check datasheet for 32bits TIMERs.

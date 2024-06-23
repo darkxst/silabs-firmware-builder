@@ -6,7 +6,7 @@
  */
 #include <stdint.h>
 #include "cmd_handlers.h"
-#include "ZW_SerialAPI.h"
+#include "SerialAPI.h"
 #include "app.h"
 #include "zpal_power_manager.h"
 #include "SwTimer.h"
