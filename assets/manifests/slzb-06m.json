@@ -8,8 +8,6 @@
 	},
 	"usb_filters": [
 		{
-			"pid": 60000,
-			"vid": 4292
 		}
 	],
 	"firmwares": [
