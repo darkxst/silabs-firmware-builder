@@ -1,0 +1,53 @@
+From 6c8377ef5ce335bf3bc3341e6d45f6c2aca4a61e Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Thu, 28 Dec 2023 18:33:50 +1100
+Subject: [PATCH] config: configure cpc usart vcom B1B0-D3D4
+
+---
+ config/sl_cpc_drv_uart_usart_vcom_config.h | 30 +++++++++++-----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/config/sl_cpc_drv_uart_usart_vcom_config.h b/config/sl_cpc_drv_uart_usart_vcom_config.h
+index dbce4ed..c8c835f 100644
+--- a/config/sl_cpc_drv_uart_usart_vcom_config.h
++++ b/config/sl_cpc_drv_uart_usart_vcom_config.h
+@@ -59,21 +59,21 @@
+ // <<< sl:start pin_tool >>>
+ // <usart signal=TX,RX,(CTS),(RTS)> SL_CPC_DRV_UART_VCOM
+ // $[USART_SL_CPC_DRV_UART_VCOM]
+-#warning "CPC USART peripheral not configured"
+-// #define SL_CPC_DRV_UART_VCOM_PERIPHERAL                 USART0
+-// #define SL_CPC_DRV_UART_VCOM_PERIPHERAL_NO              0
+-//
+-// #define SL_CPC_DRV_UART_VCOM_TX_PORT                    gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_TX_PIN                     13
+-//
+-// #define SL_CPC_DRV_UART_VCOM_RX_PORT                    gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_RX_PIN                     14
+-//
+-// #define SL_CPC_DRV_UART_VCOM_CTS_PORT                   gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_CTS_PIN                    13
+-//
+-// #define SL_CPC_DRV_UART_VCOM_RTS_PORT                   gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_RTS_PIN                    14
++
++#define SL_CPC_DRV_UART_VCOM_PERIPHERAL                 USART0
++#define SL_CPC_DRV_UART_VCOM_PERIPHERAL_NO              0
++
++#define SL_CPC_DRV_UART_VCOM_TX_PORT                    gpioPortB
++#define SL_CPC_DRV_UART_VCOM_TX_PIN                     01
++
++#define SL_CPC_DRV_UART_VCOM_RX_PORT                    gpioPortB
++#define SL_CPC_DRV_UART_VCOM_RX_PIN                     00
++
++#define SL_CPC_DRV_UART_VCOM_CTS_PORT                   gpioPortD
++#define SL_CPC_DRV_UART_VCOM_CTS_PIN                    3
++
++#define SL_CPC_DRV_UART_VCOM_RTS_PORT                   gpioPortD
++#define SL_CPC_DRV_UART_VCOM_RTS_PIN                    4
+ // [USART_SL_CPC_DRV_UART_VCOM]$
+ // <<< sl:end pin_tool >>>
+ 
+-- 
+2.40.1
+
