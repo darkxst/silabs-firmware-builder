@@ -165,7 +165,7 @@ jobs:
     needs: [build-matrix, ezsp-firmware-build, rcp-multi-pan-firmware-build, ot-rcp-firmware-build]
     steps:
       - uses: actions/checkout@v3.3.0
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           path: firmware_builds
       - name: Reorganise artifact structure
