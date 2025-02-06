@@ -1,0 +1,41 @@
+From 937b868877e963b1f66451b6109bf788f8c17dbd Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Thu, 28 Dec 2023 18:33:50 +1100
+Subject: [PATCH] config: configure cpc usart vcom B1B0
+
+---
+ config/sl_cpc_drv_uart_usart_vcom_config.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/config/sl_cpc_drv_uart_usart_vcom_config.h b/config/sl_cpc_drv_uart_usart_vcom_config.h
+index dbce4ed..f100f68 100644
+--- a/config/sl_cpc_drv_uart_usart_vcom_config.h
++++ b/config/sl_cpc_drv_uart_usart_vcom_config.h
+@@ -59,15 +59,15 @@
+ // <<< sl:start pin_tool >>>
+ // <usart signal=TX,RX,(CTS),(RTS)> SL_CPC_DRV_UART_VCOM
+ // $[USART_SL_CPC_DRV_UART_VCOM]
+-#warning "CPC USART peripheral not configured"
+-// #define SL_CPC_DRV_UART_VCOM_PERIPHERAL                 USART0
+-// #define SL_CPC_DRV_UART_VCOM_PERIPHERAL_NO              0
+-//
+-// #define SL_CPC_DRV_UART_VCOM_TX_PORT                    gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_TX_PIN                     13
+-//
+-// #define SL_CPC_DRV_UART_VCOM_RX_PORT                    gpioPortD
+-// #define SL_CPC_DRV_UART_VCOM_RX_PIN                     14
++
++#define SL_CPC_DRV_UART_VCOM_PERIPHERAL                 USART0
++#define SL_CPC_DRV_UART_VCOM_PERIPHERAL_NO              0
++
++#define SL_CPC_DRV_UART_VCOM_TX_PORT                    gpioPortA
++#define SL_CPC_DRV_UART_VCOM_TX_PIN                     5
++
++#define SL_CPC_DRV_UART_VCOM_RX_PORT                    gpioPortA
++#define SL_CPC_DRV_UART_VCOM_RX_PIN                     6
+ //
+ // #define SL_CPC_DRV_UART_VCOM_CTS_PORT                   gpioPortD
+ // #define SL_CPC_DRV_UART_VCOM_CTS_PIN                    13
+-- 
+2.40.1
+

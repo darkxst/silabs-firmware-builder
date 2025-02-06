@@ -1,0 +1,11 @@
+{
+    "name": "SLZB-07Mg24",
+    "target": "slzb-07mg24",
+    "device": "EFR32MG24A020F1024IM40",
+    "ncp-uart-hw": {
+        "configuration": {
+            "EMBER_APS_UNICAST_MESSAGE_COUNT":32,
+            "EMBER_PACKET_BUFFER_COUNT":255
+        }
+    }
+}

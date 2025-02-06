@@ -1,0 +1,35 @@
+--- a/config/sl_uartdrv_usart_vcom_config.h	2023-03-16 01:55:55.270307126 +0100
++++ b/config/sl_uartdrv_usart_vcom_config.h	2023-03-16 02:00:15.095622384 +0100
+@@ -76,21 +76,21 @@
+ // <<< sl:start pin_tool >>>
+ // <usart signal=TX,RX,(CTS),(RTS)> SL_UARTDRV_USART_VCOM
+ // $[USART_SL_UARTDRV_USART_VCOM]
+-#warning "UARTDRV USART peripheral not configured"
+-// #define SL_UARTDRV_USART_VCOM_PERIPHERAL        USART0
+-// #define SL_UARTDRV_USART_VCOM_PERIPHERAL_NO     0
++// #warning "UARTDRV USART peripheral not configured"
++#define SL_UARTDRV_USART_VCOM_PERIPHERAL        USART0
++#define SL_UARTDRV_USART_VCOM_PERIPHERAL_NO     0
+ 
+-// #define SL_UARTDRV_USART_VCOM_TX_PORT           gpioPortA
+-// #define SL_UARTDRV_USART_VCOM_TX_PIN            0
++#define SL_UARTDRV_USART_VCOM_TX_PORT           gpioPortA
++#define SL_UARTDRV_USART_VCOM_TX_PIN            5
+ 
+-// #define SL_UARTDRV_USART_VCOM_RX_PORT           gpioPortA
+-// #define SL_UARTDRV_USART_VCOM_RX_PIN            1
++#define SL_UARTDRV_USART_VCOM_RX_PORT           gpioPortA
++#define SL_UARTDRV_USART_VCOM_RX_PIN            6
+ 
+-// #define SL_UARTDRV_USART_VCOM_CTS_PORT          gpioPortA
+-// #define SL_UARTDRV_USART_VCOM_CTS_PIN           2
++//#define SL_UARTDRV_USART_VCOM_CTS_PORT          gpioPortD
++//#define SL_UARTDRV_USART_VCOM_CTS_PIN           3
+ 
+-// #define SL_UARTDRV_USART_VCOM_RTS_PORT          gpioPortA
+-// #define SL_UARTDRV_USART_VCOM_RTS_PIN           3
++//#define SL_UARTDRV_USART_VCOM_RTS_PORT          gpioPortD
++//#define SL_UARTDRV_USART_VCOM_RTS_PIN           4
+ // [USART_SL_UARTDRV_USART_VCOM]$
+ // <<< sl:end pin_tool >>>
+ 
