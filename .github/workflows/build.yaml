@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  sdk_version: 4.4.5
+  sdk_version: 4.4.3
 
 jobs:
   build-container:
@@ -26,8 +26,8 @@ jobs:
       packages: write
     outputs:
       sdk_version: ${{ env.sdk_version }}
-      ot_version: 2.4.5.0
-      ezsp_version: 7.4.5.0
+      ot_version: 2.4.3.0
+      ezsp_version: 7.4.3.0
     steps:
       - uses: actions/checkout@v3.3.0
       - name: Log in to the GitHub container registry
@@ -157,7 +157,7 @@ jobs:
       sdk_version: ${{ needs.build-container.outputs.sdk_version}}
       metadata_fw_type: "ot-rcp"
       baudrate: ${{ matrix.baudrate }}
-      metadata_extra: "{ \"ot_rcp_version\": \"SL-OPENTHREAD/2.4.5.0_GitHub-797150858\" }"
+      metadata_extra: "{ \"ot_rcp_version\": \"SL-OPENTHREAD/2.4.3.0_GitHub-797150858\" }"
 
   collect_artifacts:
     name: download and publish all artifacts
