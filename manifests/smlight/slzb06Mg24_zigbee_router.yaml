@@ -37,7 +37,6 @@ add_components:
 
 configuration:
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 115200
-  SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE: 64
   SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
 
 c_defines:
