@@ -1,0 +1,69 @@
+# Silicon Labs Project Configuration Tools: slcp, v0, Component selection file.
+project_name: ZigbeeMinimal
+label: ZigbeeMinimal
+author: Silicon Laboratories, Inc.
+description: This is a Zigbee minimal SoC network-layer application suitable as a  starting
+  point for new application development.
+category: Zigbee Application
+filter:
+- name: Device Type
+  value: [SoC]
+- name: Project Difficulty
+  value: [Advanced]
+- name: Wireless Technology
+  value: [Zigbee]
+package: Zigbee
+quality: production
+readme:
+- {path: readme.html}
+- {path: readme.html}
+source:
+- {path: main.c}
+- {path: app.c}
+sdk: {id: gecko_sdk, version: 4.4.3}
+toolchain_settings: []
+component:
+- {id: EFR32MG24A020F1024IM40}
+- instance: [example]
+  id: cli
+- {id: iostream_recommended_stream}
+- instance: [led0]
+  id: simple_led
+- {id: zigbee_application_bootloader}
+- {id: zigbee_core_cli}
+- {id: zigbee_counters}
+- {id: zigbee_debug_print}
+- {id: zigbee_network_steering}
+- {id: zigbee_pro_stack}
+- {id: zigbee_scan_dispatch}
+- {id: zigbee_source_route}
+- {id: zigbee_update_tc_link_key}
+- {id: zigbee_zcl_cli}
+- {id: zigbee_zcl_framework_core}
+config_file:
+- {path: config/zcl/zcl_config.zap, directory: zcl}
+configuration:
+- {name: SL_BOARD_ENABLE_VCOM, value: '1'}
+- condition: [iostream_usart]
+  name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+  value: usartHwFlowControlCtsAndRts
+- condition: [iostream_eusart]
+  name: SL_IOSTREAM_EUSART_VCOM_FLOW_CONTROL_TYPE
+  value: eusartHwFlowControlCtsAndRts
+- {name: SL_CLI_MAX_INPUT_ARGUMENTS, value: '16'}
+- {name: SLI_ZIGBEE_PRIMARY_NETWORK_DEVICE_TYPE, value: SLI_ZIGBEE_NETWORK_DEVICE_TYPE_ROUTER}
+- {name: SLI_ZIGBEE_PRIMARY_NETWORK_SECURITY_TYPE, value: SLI_ZIGBEE_NETWORK_SECURITY_TYPE_3_0}
+- {name: EMBER_BINDING_TABLE_SIZE, value: '10'}
+- condition: [device_series_1]
+  name: NVM3_DEFAULT_NVM_SIZE
+  value: '36864'
+- condition: [device_series_2]
+  name: NVM3_DEFAULT_NVM_SIZE
+  value: '32768'
+- {name: SL_PSA_ITS_SUPPORT_V1_DRIVER, value: '0'}
+- {name: SL_PSA_ITS_SUPPORT_V2_DRIVER, value: '0'}
+- {name: SL_PSA_ITS_SUPPORT_V3_DRIVER, value: '1'}
+ui_hints:
+  highlight:
+  - {path: readme.html}
+
