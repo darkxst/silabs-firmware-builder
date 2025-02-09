@@ -12,7 +12,6 @@ component:
 - id: cli
   instance:
     - bootloader
-- id: clock_manager
 - id: iostream_recommended_stream
 - id: iostream_usart
   instance:
