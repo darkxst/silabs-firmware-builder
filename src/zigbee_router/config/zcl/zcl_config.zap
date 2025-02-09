@@ -19,7 +19,7 @@
   "package": [
     {
       "pathRelativity": "relativeToZap",
-      "path": "../../../../../../../../../app/zcl/zcl-zap.json",
+      "path": "../../gecko_sdk_4.4.4/app/zcl/zcl-zap.json",
       "type": "zcl-properties",
       "category": "zigbee",
       "version": 1,
@@ -27,7 +27,7 @@
     },
     {
       "pathRelativity": "relativeToZap",
-      "path": "../../../../../gen-template/gen-templates.json",
+      "path": "../../../../SDKs/gecko_sdk/protocol/zigbee/app/framework/gen-template/gen-templates.json",
       "type": "gen-templates-json",
       "category": "zigbee",
       "version": "zigbee-v0"
