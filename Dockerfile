@@ -17,6 +17,7 @@ RUN \
        patch \
        python3 \
        python3-pip \
+       python3-venv \
        python3-virtualenv \
        unzip \
        xz-utils
@@ -75,7 +76,7 @@ ENV STUDIO_ADAPTER_PACK_PATH="/opt/zap"
 
 ARG USERNAME=builder
 ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER_GID=1000
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
