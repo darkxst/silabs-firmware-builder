@@ -58,8 +58,8 @@
 #define LIGHT_ENDPOINT           1
 #define STEERING_DELAY_MS        15000
 
-static sl_zigbee_af_event_t commissioning_led_event;
-static sl_zigbee_af_event_t finding_and_binding_event;
+static sl_zigbee_event_t commissioning_led_event;
+static sl_zigbee_event_t finding_and_binding_event;
 
 //---------------
 // Custom CLI Commands
@@ -138,12 +138,12 @@ sl_cli_command_group_t sl_cli_btl_command_group =
 // Custom helper functions
 static void sync_on_off_cluster(uint8_t endpoint){
   bool onOff;
-  if (sl_zigbee_af_read_server_attribute(endpoint,
-                                         ZCL_ON_OFF_CLUSTER_ID,
-                                         ZCL_ON_OFF_ATTRIBUTE_ID,
-                                         (uint8_t *)&onOff,
-                                         sizeof(onOff))
-      == SL_ZIGBEE_ZCL_STATUS_SUCCESS) {
+  if (emberAfReadServerAttribute(endpoint,
+                                ZCL_ON_OFF_CLUSTER_ID,
+                                ZCL_ON_OFF_ATTRIBUTE_ID,
+                                (uint8_t *)&onOff,
+                                sizeof(onOff))
+      == EMBER_ZCL_STATUS_SUCCESS) {
     if (onOff) {
       led_turn_on(ON_OFF_LIGHT_LED);
     } else {
@@ -155,35 +155,35 @@ static void sync_on_off_cluster(uint8_t endpoint){
 //---------------
 // Event handlers
 
-static void commissioning_led_event_handler(sl_zigbee_af_event_t *event)
+static void commissioning_led_event_handler(sl_zigbee_event_t *event)
 {
-  if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK) {
+  if (emberAfNetworkState() == EMBER_JOINED_NETWORK) {
     uint16_t identifyTime;
-    sl_zigbee_af_read_server_attribute(LIGHT_ENDPOINT,
-                                       ZCL_IDENTIFY_CLUSTER_ID,
-                                       ZCL_IDENTIFY_TIME_ATTRIBUTE_ID,
-                                       (uint8_t *)&identifyTime,
-                                       sizeof(identifyTime));
+    emberAfReadServerAttribute(LIGHT_ENDPOINT,
+                                ZCL_IDENTIFY_CLUSTER_ID,
+                                ZCL_IDENTIFY_TIME_ATTRIBUTE_ID,
+                                (uint8_t *)&identifyTime,
+                                sizeof(identifyTime));
     if (identifyTime > 0 && identifyTime < 60) {
       led_toggle(COMMISSIONING_STATUS_LED);
-      sl_zigbee_af_event_set_delay_ms(&commissioning_led_event,
+      sl_zigbee_event_set_delay_ms(&commissioning_led_event,
                                       LED_BLINK_PERIOD_MS << 1);
     } else {
       sync_on_off_cluster(LIGHT_ENDPOINT);
     }
   } else {
-    sl_status_t status = sl_zigbee_af_network_steering_start();
+    EmberStatus status = emberAfPluginNetworkSteeringStart();
     sl_zigbee_app_debug_println("%s network %s: 0x%X", "Join", "start", status);
   }
 }
 
-static void finding_and_binding_event_handler(sl_zigbee_af_event_t *event)
+static void finding_and_binding_event_handler(sl_zigbee_event_t *event)
 {
-  if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK) {
-    sl_zigbee_af_event_set_inactive(&finding_and_binding_event);
+  if (emberAfNetworkState() == EMBER_JOINED_NETWORK) {
+    sl_zigbee_event_set_inactive(&finding_and_binding_event);
 
     sl_zigbee_app_debug_println("Find and bind target start: 0x%X",
-                                sl_zigbee_af_find_and_bind_target_start(LIGHT_ENDPOINT));
+                                emberAfPluginFindAndBindTargetStart(LIGHT_ENDPOINT));
   }
 }
 
@@ -197,30 +197,30 @@ static void finding_and_binding_event_handler(sl_zigbee_af_event_t *event)
  * of changes to the stack status and take appropriate action. The framework
  * will always process the stack status after the callback returns.
  */
-void sl_zigbee_af_stack_status_cb(sl_status_t status)
+void emberAfStackStatusCallback(EmberStatus status)
 {
   // Note, the ZLL state is automatically updated by the stack and the plugin.
-  if (status == SL_STATUS_NETWORK_DOWN) {
+  if (status == EMBER_NETWORK_DOWN) {
     led_turn_off(COMMISSIONING_STATUS_LED);
-    sl_zigbee_af_event_set_active(&commissioning_led_event);
-  } else if (status == SL_STATUS_NETWORK_UP) {
+    sl_zigbee_event_set_active(&commissioning_led_event);
+  } else if (status == EMBER_NETWORK_UP) {
     led_turn_on(COMMISSIONING_STATUS_LED);
 
     // Send announcement when coming online so coordinator detects without waiting for ping
-    sl_zigbee_send_device_announcement();
-    sl_zigbee_af_event_set_active(&finding_and_binding_event);
+    emberSendDeviceAnnouncement();
+    sl_zigbee_event_set_active(&finding_and_binding_event);
   }
 }
 
 /** @brief Init
  * Application init function
  */
-void sl_zigbee_af_main_init_cb(void)
+void emberAfMainInitCallback(void)
 {
-  sl_zigbee_af_event_init(&commissioning_led_event, commissioning_led_event_handler);
-  sl_zigbee_af_isr_event_init(&finding_and_binding_event, finding_and_binding_event_handler);
+  sl_zigbee_event_init(&commissioning_led_event, commissioning_led_event_handler);
+  sl_zigbee_event_init(&finding_and_binding_event, finding_and_binding_event_handler);
 
-  sl_zigbee_af_event_set_active(&commissioning_led_event);
+  sl_zigbee_event_set_active(&commissioning_led_event);
 
   // Custom bootloader CLI commands
   sl_cli_command_add_command_group(sl_cli_bootloader_handle, &sl_cli_btl_command_group);
@@ -230,7 +230,7 @@ void sl_zigbee_af_main_init_cb(void)
  *
  * This callback is fired when the Network Steering plugin is complete.
  *
- * @param status On success this will be set to SL_STATUS_OK to indicate a
+ * @param status On success this will be set to EMBER_SUCCESS to indicate a
  * network was joined successfully. On failure this will be the status code of
  * the last join or scan attempt.
  *
@@ -244,24 +244,24 @@ void sl_zigbee_af_main_init_cb(void)
  * this, one is able to tell on which channel mask and with which key the
  * process was complete.
  */
-void sl_zigbee_af_network_steering_complete_cb(sl_status_t status,
+void emberAfPluginNetworkSteeringCompleteCallback(EmberStatus status,
                                                uint8_t totalBeacons,
                                                uint8_t joinAttempts,
                                                uint8_t finalState)
 {
   sl_zigbee_app_debug_println("Join network complete: 0x%X", status);
 
-  if (status != SL_STATUS_OK) {
+  if (status != EMBER_SUCCESS) {
 #ifdef SL_CATALOG_ZIGBEE_ZLL_COMMISSIONING_COMMON_PRESENT
     // Initialize our ZLL security now so that we are ready to be a touchlink
     // target at any point.
-    status = sl_zigbee_af_zll_set_initial_security_state();
-    if (status != SL_STATUS_OK) {
+     status = emberAfZllSetInitialSecurityState();
+    if (status != EMBER_SUCCESS) {
       sl_zigbee_app_debug_println("Error: cannot initialize ZLL security: 0x%X", status);
     }
 #endif //SL_CATALOG_ZIGBEE_ZLL_COMMISSIONING_COMMON_PRESENT
 
-    sl_zigbee_af_event_set_delay_ms(&commissioning_led_event,
+    sl_zigbee_event_set_delay_ms(&commissioning_led_event,
                                     STEERING_DELAY_MS);
   }
 }
@@ -273,9 +273,9 @@ void sl_zigbee_af_network_steering_complete_cb(sl_status_t status,
  * attribute value. The value passed into this callback is the value to which
  * the attribute was set by the framework.
  */
-void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint,
-                                           sl_zigbee_af_cluster_id_t clusterId,
-                                           sl_zigbee_af_attribute_id_t attributeId,
+void emberAfPostAttributeChangeCallback(uint8_t endpoint,
+                                           EmberAfClusterId clusterId,
+                                           EmberAfClusterId attributeId,
                                            uint8_t mask,
                                            uint16_t manufacturerCode,
                                            uint8_t type,
@@ -293,7 +293,7 @@ void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint,
  * @param endpoint The identifying endpoint Ver.: always
  * @param identifyTime The identify time Ver.: always
  */
-void sl_zigbee_af_identify_start_feedback_cb(uint8_t endpoint,
+void emberAfPluginIdentifyStartFeedbackCallback(uint8_t endpoint,
                                              uint16_t identifyTime)
 {
   sl_zigbee_app_debug_println("Identify start: endpoint=%d, time=%d",
@@ -301,12 +301,12 @@ void sl_zigbee_af_identify_start_feedback_cb(uint8_t endpoint,
   if (identifyTime > 0 && identifyTime < 60) {
     sl_zigbee_app_debug_println("Identify run: endpoint=%d, time=%d",
                               endpoint, identifyTime);
-    sl_zigbee_af_event_set_delay_ms(&commissioning_led_event,
+    sl_zigbee_event_set_delay_ms(&commissioning_led_event,
                                   LED_BLINK_PERIOD_MS);
   }
 }
 
-void sl_zigbee_af_identify_stop_feedback_cb(uint8_t endpoint)
+void emberAfPluginIdentifyStopFeedbackCallback(uint8_t endpoint)
 {
   sl_zigbee_app_debug_println("Identify stop: endpoint=%d", endpoint);
 }
@@ -317,11 +317,11 @@ void sl_zigbee_af_identify_stop_feedback_cb(uint8_t endpoint)
  *
  * @param endpoint Endpoint that is being initialized
  */
-void sl_zigbee_af_on_off_cluster_server_post_init_cb(uint8_t endpoint)
+void emberAfPluginOnOffClusterServerPostInitCallback(uint8_t endpoint)
 {
   // At startup, trigger a read of the attribute and possibly a toggle of the
   // LED to make sure they are always in sync.
-  sl_zigbee_af_post_attribute_change_cb(endpoint,
+  emberAfPostAttributeChangeCallback(endpoint,
                                         ZCL_ON_OFF_CLUSTER_ID,
                                         ZCL_ON_OFF_ATTRIBUTE_ID,
                                         CLUSTER_MASK_SERVER,
@@ -335,14 +335,14 @@ void sl_zigbee_af_on_off_cluster_server_post_init_cb(uint8_t endpoint)
  *
  * Application framework equivalent of ::sl_zigbee_radio_needs_calibrating_handler
  */
-void sl_zigbee_af_radio_needs_calibrating_cb(void)
+void emberAfRadioNeedsCalibratingCallback(void)
 {
   #ifndef EZSP_HOST
   sl_mac_calibrate_current_channel();
   #endif
 }
 
-#if defined(SL_CATALOG_SIMPLE_BUTTON_PRESENT) && (SL_ZIGBEE_APP_FRAMEWORK_USE_BUTTON_TO_STAY_AWAKE == 0)
+#if defined(SL_CATALOG_SIMPLE_BUTTON_PRESENT) && (SL_ZIGBEE_FRAMEWORK_USE_BUTTON_TO_STAY_AWAKE == 0)
 #include "sl_simple_button.h"
 #include "sl_simple_button_instances.h"
 #ifdef SL_CATALOG_ZIGBEE_FORCE_SLEEP_AND_WAKEUP_PRESENT
@@ -363,13 +363,13 @@ void sl_zigbee_af_radio_needs_calibrating_cb(void)
 void sl_button_on_change(const sl_button_t *handle)
 {
   if (sl_button_get_state(handle) == SL_SIMPLE_BUTTON_RELEASED) {
-    sl_zigbee_af_event_set_active(&finding_and_binding_event);
+    sl_zigbee_event_set_active(&finding_and_binding_event);
     #ifdef SL_CATALOG_ZIGBEE_FORCE_SLEEP_AND_WAKEUP_PRESENT
     sl_zigbee_app_framework_force_wakeup();
     #endif //SL_CATALOG_ZIGBEE_FORCE_SLEEP_AND_WAKEUP_PRESENT
   }
 }
-#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT && SL_ZIGBEE_APP_FRAMEWORK_USE_BUTTON_TO_STAY_AWAKE == 0
+#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT && EMBERAPP_FRAMEWORK_USE_BUTTON_TO_STAY_AWAKE == 0
 
 #ifdef SL_CATALOG_ZIGBEE_FORCE_SLEEP_AND_WAKEUP_PRESENT
 void sli_zigbee_app_framework_force_sleep_callback(void)
