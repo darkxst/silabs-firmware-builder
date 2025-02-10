@@ -20,12 +20,31 @@ import subprocess
 import multiprocessing
 from datetime import datetime, timezone
 
+import jq
 from ruamel.yaml import YAML
 
 
-SLC = ["slc", "--daemon", "--daemon-timeout", "1"]
-
 LOGGER = logging.getLogger(__name__)
+SLC = ["slc", "--daemon", "--daemon-timeout", "1"]
+DEFAULT_JSON_CONFIG = [
+    # Fix a few paths by default
+    {
+        "file": "config/zcl/zcl_config.zap",
+        "jq": '(.package[] | select(.type == "zcl-properties")).path = $zcl_zap',
+        "args": {
+            "zcl_zap": "template:{sdk}/app/zcl/zcl-zap.json",
+        },
+        "skip_if_missing": True,
+    },
+    {
+        "file": "config/zcl/zcl_config.zap",
+        "jq": '(.package[] | select(.type == "gen-templates-json")).path = $gen_templates',
+        "args": {
+            "gen_templates": "template:{sdk}/protocol/zigbee/app/framework/gen-template/gen-templates.json",
+        },
+        "skip_if_missing": True,
+    },
+]
 
 
 yaml = YAML(typ="safe")
@@ -37,6 +56,14 @@ def evaulate_f_string(f_string: str, variables: dict[str, typing.Any]) -> str:
     """
 
     return eval("f" + repr(f_string), variables)
+
+
+def expand_template(value: typing.Any, env: dict[str, typing.Any]) -> typing.Any:
+    """Expand a template string."""
+    if isinstance(value, str) and value.startswith("template:"):
+        return evaulate_f_string(value.replace("template:", "", 1), env)
+    else:
+        return value
 
 
 def ensure_folder(path: str | pathlib.Path) -> pathlib.Path:
@@ -287,10 +314,10 @@ def main():
 
     # Ensure we can load the correct SDK and toolchain
     sdks = load_sdks(args.sdks)
-    sdk, sdk_version = next(
+    sdk, sdk_name_version = next(
         (path, version) for path, version in sdks.items() if version == manifest["sdk"]
     )
-    sdk_name = sdk_version.split(":", 1)[0]
+    sdk_name, _, sdk_version = sdk_name_version.partition(":")
 
     toolchains = load_toolchains(args.toolchains)
     toolchain = next(
@@ -383,6 +410,35 @@ def main():
     with (args.build_dir / "gbl_metadata.yaml").open("w") as f:
         yaml.dump(manifest["gbl"], f)
 
+    # Template variables
+    value_template_env = {
+        "git_repo_hash": get_git_commit_id(repo=pathlib.Path(__file__).parent.parent),
+        "manifest_name": args.manifest.stem,
+        "now": datetime.now(timezone.utc),
+        "sdk": sdk,
+        "sdk_version": sdk_version,
+    }
+
+    for json_config in DEFAULT_JSON_CONFIG + manifest.get("json_config", []):
+        json_path = build_template_path / json_config["file"]
+
+        if json_config.get("skip_if_missing", False) and not json_path.exists():
+            continue
+
+        jq_args = {
+            k: expand_template(v, value_template_env)
+            for k, v in json_config.get("args", {}).items()
+        }
+
+        LOGGER.debug("Substituting JQ args for %s: %s", json_path, jq_args)
+
+        result = (
+            jq.compile(json_config["jq"], args=jq_args)
+            .input_text(json_path.read_text())
+            .first()
+        )
+        json_path.write_text(json.dumps(result, indent=2))
+
     # Next, generate a chip-specific project from the modified base project
     LOGGER.info(f"Generating project for {manifest['device']}")
 
@@ -412,13 +468,6 @@ def main():
             LOGGER.error("Referenced extension not present in SDK: %s", expected_dir)
             sys.exit(1)
 
-    # Template variables for C defines
-    value_template_env = {
-        "git_repo_hash": get_git_commit_id(repo=pathlib.Path(__file__).parent.parent),
-        "manifest_name": args.manifest.stem,
-        "now": datetime.now(timezone.utc),
-    }
-
     # Actually search for C defines within config
     unused_defines = set(manifest.get("c_defines", {}).keys())
 
@@ -429,7 +478,7 @@ def main():
             new_config_h_lines = []
 
             for index, line in enumerate(config_h_lines):
-                for define, value_template in manifest.get("c_defines", {}).items():
+                for define, value in manifest.get("c_defines", {}).items():
                     if f"#define {define} " not in line:
                         continue
 
@@ -454,15 +503,7 @@ def main():
                         assert re.match(r'#warning ".*? not configured"', prev_line)
                         new_config_h_lines.pop(index - 1)
 
-                    value_template = str(value_template)
-
-                    if value_template.startswith("template:"):
-                        value = value_template.replace("template:", "", 1).format(
-                            **value_template_env
-                        )
-                    else:
-                        value = value_template
-
+                    value = expand_template(value, value_template_env)
                     new_config_h_lines.append(f"#define {define}{alignment}{value}")
                     written_config[define] = value
 
