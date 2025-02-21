@@ -1,0 +1,33 @@
+name: ZS3L Bootloader
+device: EFR32MG21A020F768IM32
+base_project: src/bootloader
+filename: "{manifest_name}_{gecko_bootloader_version}"
+sdk: "simplicity_sdk:2024.6.3"
+toolchain: "12.2.1.20221205"
+
+gbl:
+  fw_type: gecko-bootloader
+  gecko_bootloader_version: dynamic
+  baudrate: 115200
+
+c_defines:
+  SL_SERIAL_UART_FLOW_CONTROL: 1
+
+  SL_SERIAL_UART_PERIPHERAL: USART0
+  SL_SERIAL_UART_PERIPHERAL_NO: 0
+
+  SL_SERIAL_UART_TX_PORT: gpioPortD
+  SL_SERIAL_UART_TX_PIN:  0
+
+  SL_SERIAL_UART_RX_PORT: gpioPortD
+  SL_SERIAL_UART_RX_PIN:  1
+
+  SL_SERIAL_UART_CTS_PORT: gpioPortA
+  SL_SERIAL_UART_CTS_PIN:  3
+
+  SL_SERIAL_UART_RTS_PORT: gpioPortA
+  SL_SERIAL_UART_RTS_PIN:  4
+
+  SL_GPIO_ACTIVATION_POLARITY: LOW
+  SL_BTL_BUTTON_PORT: gpioPortC
+  SL_BTL_BUTTON_PIN: 1
