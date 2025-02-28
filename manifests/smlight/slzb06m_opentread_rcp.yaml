@@ -2,7 +2,7 @@ name: SLZB-06M OpenThread RCP
 device: EFR32MG21A020F768IM32
 base_project: src/openthread_rcp
 filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{fw_variant}_{baudrate}"
-sdk: "gecko_sdk:4.4.4"
+sdk: "gecko_sdk:4.4.6"
 toolchain: "12.2.1.20221205"
 
 gbl:
