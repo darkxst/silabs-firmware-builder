@@ -16,6 +16,7 @@ add_components:
 
 configuration:
   EMBER_CHILD_TABLE_SIZE: 32
+  EMBER_ADDRESS_TABLE_SIZE: 32
 
 c_defines:
   EMBER_APS_UNICAST_MESSAGE_COUNT: 32
