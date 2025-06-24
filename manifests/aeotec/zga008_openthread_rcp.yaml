@@ -2,7 +2,7 @@ name: ZGA008 OpenThread RCP
 device: EFR32MG21A020F1024IM32
 base_project: src/openthread_rcp
 filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{baudrate}"
-sdk: "simplicity_sdk:2024.12.2"
+sdk: "simplicity_sdk:2025.6.0"
 toolchain: "12.2.1.20221205"
 
 gbl:

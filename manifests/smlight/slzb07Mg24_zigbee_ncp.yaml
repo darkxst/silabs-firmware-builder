@@ -2,7 +2,7 @@ name: SLZB-07Mg24 Zigbee
 device: EFR32MG24A020F1024IM40
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}_{baudrate}"
-sdk: "simplicity_sdk:2024.12.2"
+sdk: "simplicity_sdk:2025.6.0"
 toolchain: "12.2.1.20221205"
 
 gbl:
