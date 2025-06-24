@@ -13,6 +13,7 @@ RUN \
        yq \
        libgl1 \
        libglib2.0-0 \
+       locales \
        make \
        openjdk-21-jre-headless \
        patch \
@@ -20,6 +21,13 @@ RUN \
        python3-ruamel.yaml \
        unzip \
        xz-utils
+
+RUN \
+    locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # Install Simplicity Commander (unfortunately no stable URL available, this
 # is known to be working with Commander_linux_x86_64_1v15p0b1306.tar.bz).
