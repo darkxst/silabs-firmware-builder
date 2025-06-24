@@ -60,11 +60,11 @@ RUN \
     && unzip -q -d simplicity_sdk_2025.6.0 simplicity_sdk_2025.6.0.zip \
     && rm simplicity_sdk_2025.6.0.zip
 
-# ZCL Advanced Platform (ZAP) v2024.12.13
+# ZCL Advanced Platform (ZAP) v2025.06.09
 RUN \
-    curl -o zap_2024.12.13.zip -L https://github.com/project-chip/zap/releases/download/v2024.12.13/zap-linux-x64.zip \
-    && unzip -q -d /opt/zap zap_2024.12.13.zip \
-    && rm zap_2024.12.13.zip
+    curl -o zap_2025.06.09.zip -L https://github.com/project-chip/zap/releases/download/v2025.06.09/zap-linux-x64.zip \
+    && unzip -q -d /opt/zap zap_2025.06.09.zip \
+    && rm zap_2025.06.09.zip
 
 ENV STUDIO_ADAPTER_PACK_PATH="/opt/zap"
 
