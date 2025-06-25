@@ -16,6 +16,7 @@ RUN \
        locales \
        make \
        openjdk-21-jre-headless \
+       openssh-client \
        patch \
        python3 \
        python3-ruamel.yaml \
@@ -58,7 +59,8 @@ RUN \
 RUN \
     curl -o simplicity_sdk_2025.6.0.zip -L https://github.com/SiliconLabs/simplicity_sdk/releases/download/v2025.6.0/simplicity-sdk.zip \
     && unzip -q -d simplicity_sdk_2025.6.0 simplicity_sdk_2025.6.0.zip \
-    && rm simplicity_sdk_2025.6.0.zip
+    && rm simplicity_sdk_2025.6.0.zip \
+    && chown ubuntu:ubuntu -R /simplicity_sdk_2025.6.0
 
 # ZCL Advanced Platform (ZAP) v2025.06.09
 RUN \
@@ -75,6 +77,7 @@ ARG USER_GID=$USER_UID
 # # Create the user
 # RUN groupadd --gid $USER_GID $USERNAME \
 #     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+RUN mkdir -p /build && chown $USERNAME:$USERNAME /build
 
 USER $USERNAME
 WORKDIR /build
