@@ -9,7 +9,7 @@ gbl:
   fw_type: zigbee_ncp
   ezsp_version: dynamic
   baudrate: 115200
-  fw_variant: no_flow
+  fw_variant: sw_flow
 
 configuration:
   SL_ZIGBEE_CHILD_TABLE_SIZE: 32
@@ -30,7 +30,7 @@ c_defines:
   SL_ZIGBEE_SOURCE_ROUTE_TABLE_SIZE: 200
 
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 115200
-  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: uartFlowControlNone
+  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: uartFlowControlSoftware
   SL_IOSTREAM_USART_VCOM_PERIPHERAL: USART0
   SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO: 0
 

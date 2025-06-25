@@ -9,7 +9,7 @@ gbl:
   fw_type: openthread_rcp
   ot_rcp_version: dynamic
   baudrate: 460800
-  fw_variant: no_flow
+  fw_variant: sw_flow
 
 
 c_defines:
