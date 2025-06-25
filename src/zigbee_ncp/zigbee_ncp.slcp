@@ -10,6 +10,7 @@ component:
   - id: iostream_usart
     instance:
       - vcom
+  - id: sl_main
   - id: zigbee_debug_print
   - id: iostream_vuart
   - id: token_manager

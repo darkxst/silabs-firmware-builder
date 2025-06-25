@@ -8,6 +8,7 @@ quality: production
 
 component:
   - id: ot_stack_rcp
+  - id: sl_main
   - id: ot_crash_handler
   - id: iostream_usart
     instance:

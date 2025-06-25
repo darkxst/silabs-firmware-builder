@@ -20,6 +20,7 @@ component:
 - id: simple_led
   instance:
     - led0
+- id: sl_main
 - id: zigbee_application_bootloader
 - id: zigbee_basic
 - id: zigbee_core_cli

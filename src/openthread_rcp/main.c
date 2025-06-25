@@ -1,9 +1,9 @@
-/*******************************************************************************
- * @file
+/***************************************************************************//**
+ * @file main.c
  * @brief main() function.
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -27,49 +27,45 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *
  ******************************************************************************/
-
-#include "app.h"
 #include "sl_component_catalog.h"
-#include "sl_system_init.h"
+#include "sl_main_init.h"
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
 #include "sl_power_manager.h"
-#endif // SL_CATALOG_POWER_MANAGER_PRESENT
+#endif
 #if defined(SL_CATALOG_KERNEL_PRESENT)
-#include "sl_system_kernel.h"
-#else // !SL_CATALOG_KERNEL_PRESENT
-#include "sl_system_process_action.h"
+#include "sl_main_kernel.h"
+#else // SL_CATALOG_KERNEL_PRESENT
+#include "sl_main_process_action.h"
 #endif // SL_CATALOG_KERNEL_PRESENT
 
 int main(void)
 {
-    // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
-    // Note that if the kernel is present, processing task(s) will be created by
-    // this call.
-    sl_system_init();
-
-    // Initialize the application. For example, create periodic timer(s) or
-    // task(s) if the kernel is present.
-    app_init();
+  // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
+  // Note that if the kernel is present, the start task will be started and software
+  // component initialization will take place there.
+  sl_main_init();
 
 #if defined(SL_CATALOG_KERNEL_PRESENT)
-    // Start the kernel. Task(s) created in app_init() will start running.
-    sl_system_kernel_start();
+  // Start the kernel. The start task will be executed (Highest priority) to complete
+  // the Simplicity SDK components initialization and the user app_init() hook function will be called.
+  sl_main_kernel_start();
 #else // SL_CATALOG_KERNEL_PRESENT
-    while (1)
-    {
-        // Do not remove this call: Silicon Labs components process action routine
-        // must be called from the super loop.
-        sl_system_process_action();
 
-        // Application process.
-        app_process_action();
+  // User provided code.
+  app_init();
+
+  while (1) {
+    // Silicon Labs components process action routine
+    // must be called from the super loop.
+    sl_main_process_action();
+
+    // User provided code. Application process.
+    app_process_action();
 
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
-        // Let the CPU go to sleep if the system allows it.
-        sl_power_manager_sleep();
+    // Let the CPU go to sleep if the system allows it.
+    sl_power_manager_sleep();
 #endif
-    }
-    // Clean-up when exiting the application.
-    app_exit();
+  }
 #endif // SL_CATALOG_KERNEL_PRESENT
 }
