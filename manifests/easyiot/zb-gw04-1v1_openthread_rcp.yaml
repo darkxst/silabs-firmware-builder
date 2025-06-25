@@ -9,11 +9,11 @@ gbl:
   fw_type: openthread_rcp
   ot_rcp_version: dynamic
   baudrate: 230400
-  fw_variant: sw_flow
+  fw_variant: no_flow
 
 c_defines:
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 230400
-  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: uartFlowControlSoftware
+  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
 
   SL_IOSTREAM_USART_VCOM_PERIPHERAL: USART0
   SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO: 0
