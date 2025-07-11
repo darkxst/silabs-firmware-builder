@@ -2,7 +2,7 @@ name: SLZB-06Mg26 Zigbee Router
 device: EFR32MG26B420F3200IM48
 base_project: src/zigbee_router
 filename: "{manifest_name}_{ezsp_version}_{baudrate}"
-sdk: "simplicity_sdk:2024.6.2"
+sdk: "simplicity_sdk:2024.6.3"
 toolchain: "12.2.1.20221205"
 
 gbl:
@@ -14,7 +14,7 @@ json_config:
   - file: "config/zcl/zcl_config.zap"
     jq: |
       ( .endpointTypes[].clusters[].attributes[] | select(.name == "model identifier"))
-      .defaultValue = "SLZB-06Mg24"
+      .defaultValue = "SLZB-06Mg26"
 
   - file: "config/zcl/zcl_config.zap"
     jq: |
@@ -24,7 +24,7 @@ json_config:
   - file: "config/zcl/zcl_config.zap"
     jq: |
       ( .endpointTypes[].clusters[].attributes[] | select(.name == "date code"))
-      .defaultValue = "20250102"
+      .defaultValue = "20250712"
 
   - file: "config/zcl/zcl_config.zap"
     jq: |

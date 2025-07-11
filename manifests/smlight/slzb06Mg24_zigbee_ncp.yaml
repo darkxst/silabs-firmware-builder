@@ -1,7 +1,7 @@
 name: SLZB-06Mg24 Zigbee
 device: EFR32MG24A020F1024IM40
 base_project: src/zigbee_ncp
-filename: "{manifest_name}_{ezsp_version}_{baudrate}"
+filename: "{manifest_name}_{ezsp_version}_{fw_variant}_{baudrate}"
 sdk: "simplicity_sdk:2024.6.3"
 toolchain: "12.2.1.20221205"
 
@@ -9,6 +9,7 @@ gbl:
   fw_type: zigbee_ncp
   ezsp_version: dynamic
   baudrate: 115200
+  fw_variant: sw_flow
 
 slcp_defines:
   SL_ZIGBEE_ADDRESS_TABLE_SIZE: 32
