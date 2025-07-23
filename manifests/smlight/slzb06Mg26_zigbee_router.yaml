@@ -14,7 +14,7 @@ json_config:
   - file: "config/zcl/zcl_config.zap"
     jq: |
       ( .endpointTypes[].clusters[].attributes[] | select(.name == "model identifier"))
-      .defaultValue = "SLZB-06Mg24"
+      .defaultValue = "SLZB-06Mg26"
 
   - file: "config/zcl/zcl_config.zap"
     jq: |
@@ -24,7 +24,7 @@ json_config:
   - file: "config/zcl/zcl_config.zap"
     jq: |
       ( .endpointTypes[].clusters[].attributes[] | select(.name == "date code"))
-      .defaultValue = "20250102"
+      .defaultValue = "20250712"
 
   - file: "config/zcl/zcl_config.zap"
     jq: |
