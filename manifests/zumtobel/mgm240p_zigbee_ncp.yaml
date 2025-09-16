@@ -1,4 +1,4 @@
-name: MGM240P Zigbee
+name: Zumtobel MGM240P Zigbee
 device: MGM240PB32VNA
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}_{fw_variant}_{baudrate}"

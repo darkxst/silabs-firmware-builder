@@ -1,4 +1,4 @@
-name: MGM240P Bootloader
+name: Zumtobel MGM240P Bootloader
 device: MGM240PB32VNA
 base_project: src/bootloader
 filename: "{manifest_name}_{gecko_bootloader_version}"
