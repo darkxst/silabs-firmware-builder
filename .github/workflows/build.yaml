@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  sdk_version: 4.4.5
+  sdk_version: 4.4.6
 
 jobs:
   build-container:
