@@ -150,7 +150,7 @@ jobs:
             curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | bash -s 20
             apt-get install -y nodejs
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
           name: ${{ inputs.firmware_name }}
