@@ -1,0 +1,7 @@
+﻿# Properties file for Simplicity Studio metadata
+id=uc.extension.nc_erf32_watchdog
+
+version=1.0.0
+
+label=EFR32 Watchdog
+description=EFR32 Watchdog.
