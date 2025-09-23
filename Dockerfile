@@ -12,6 +12,7 @@ RUN \
        jq \
        yq \
        libgl1 \
+       libglib2.0-0 \
        make \
        default-jre-headless \
        patch \
