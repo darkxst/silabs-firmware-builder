@@ -2,7 +2,7 @@ name: SkyConnect Zigbee
 device: EFR32MG21A020F512IM32
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}"
-sdk: "simplicity_sdk:2025.6.1"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:

@@ -2,7 +2,7 @@ name: SLZB-07 Zigbee Router
 device: EFR32MG21A020F768IM32
 base_project: src/zigbee_router
 filename: "{manifest_name}_{ezsp_version}_{baudrate}"
-sdk: "simplicity_sdk:2025.6.1"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:
