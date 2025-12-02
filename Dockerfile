@@ -55,12 +55,12 @@ RUN \
     && tar -C /opt -xf arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz \
     && rm arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz
 
-# Simplicity SDK 2025.6.1
+# Simplicity SDK 2025.6.2
 RUN \
-    curl -o simplicity_sdk_2025.6.1.zip -L https://github.com/SiliconLabs/simplicity_sdk/releases/download/v2025.6.1/simplicity-sdk.zip \
-    && unzip -q -d simplicity_sdk_2025.6.1 simplicity_sdk_2025.6.1.zip \
-    && rm simplicity_sdk_2025.6.1.zip \
-    && chown ubuntu:ubuntu -R /simplicity_sdk_2025.6.1
+    curl -o simplicity_sdk_2025.6.2.zip -L https://github.com/SiliconLabs/simplicity_sdk/releases/download/v2025.6.2/simplicity-sdk.zip \
+    && unzip -q -d simplicity_sdk_2025.6.2 simplicity_sdk_2025.6.2.zip \
+    && rm simplicity_sdk_2025.6.2.zip \
+    && chown ubuntu:ubuntu -R /simplicity_sdk_2025.6.2
 
 # ZCL Advanced Platform (ZAP) v2025.06.09
 RUN \
