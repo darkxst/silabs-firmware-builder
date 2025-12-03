@@ -2,7 +2,7 @@ name: Z-Wave Stick
 device: EFR32ZG23A020F512GM40
 base_project: src/zwave_ncp
 filename: "{manifest_name}_{zwave_version}"
-sdk: "simplicity_sdk:2025.6.0"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:

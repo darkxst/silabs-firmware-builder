@@ -2,7 +2,7 @@ name: SLZB-06M Zigbee
 device: EFR32MG21A020F768IM32
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}_{fw_variant}_{baudrate}"
-sdk: "simplicity_sdk:2025.6.0"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:

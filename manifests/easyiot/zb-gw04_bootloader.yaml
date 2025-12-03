@@ -2,7 +2,7 @@ name: ZB-GW04 Bootloader
 device: EFR32MG21A020F768IM32
 base_project: src/bootloader
 filename: "{manifest_name}_{gecko_bootloader_version}"
-sdk: "simplicity_sdk:2025.6.0"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:
