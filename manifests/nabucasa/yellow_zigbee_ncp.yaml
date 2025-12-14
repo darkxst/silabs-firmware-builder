@@ -26,6 +26,10 @@ c_defines:
     type: c_flag
     value: 32
 
+  SL_ZIGBEE_ROUTE_TABLE_SIZE:
+    type: c_flag
+    value: 250
+
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 115200
   SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlCtsAndRts
 
