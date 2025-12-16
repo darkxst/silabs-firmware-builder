@@ -1,0 +1,34 @@
+name: Seedstudio MG24 Bootloader
+device: EFR32MG24B220F1536IM48
+base_project: src/bootloader
+filename: "{manifest_name}_{gecko_bootloader_version}_{fw_variant}"
+sdk: "simplicity_sdk:2024.6.3"
+toolchain: "12.2.1.20221205"
+
+gbl:
+  fw_type: gecko-bootloader
+  gecko_bootloader_version: dynamic
+  baudrate: 115200
+  fw_variant: BL_PC00
+
+c_defines:
+  SL_SERIAL_UART_FLOW_CONTROL: 0
+
+  SL_SERIAL_UART_PERIPHERAL: USART0
+  SL_SERIAL_UART_PERIPHERAL_NO: 0
+
+  SL_SERIAL_UART_TX_PORT: gpioPortA
+  SL_SERIAL_UART_TX_PIN:  8
+
+  SL_SERIAL_UART_RX_PORT: gpioPortA
+  SL_SERIAL_UART_RX_PIN:  9
+
+  SL_SERIAL_UART_CTS_PORT: 0
+  SL_SERIAL_UART_CTS_PIN:  0
+
+  SL_SERIAL_UART_RTS_PORT: 0
+  SL_SERIAL_UART_RTS_PIN:  0
+
+  SL_GPIO_ACTIVATION_POLARITY: LOW
+  SL_BTL_BUTTON_PORT: gpioPortC
+  SL_BTL_BUTTON_PIN: 0
