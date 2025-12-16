@@ -1,0 +1,34 @@
+name: Seedstudio MG24 OpenThread RCP
+device: EFR32MG24B220F1536IM48
+base_project: src/openthread_rcp
+filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{fw_variant}_{baudrate}"
+sdk: "simplicity_sdk:2025.6.2"
+toolchain: "12.2.1.20221205"
+
+gbl:
+  fw_type: openthread_rcp
+  ot_rcp_version: dynamic
+  baudrate: 460800
+  fw_variant: no_flow
+
+c_defines:
+  SL_IOSTREAM_USART_VCOM_BAUDRATE: 460800
+  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
+  SL_IOSTREAM_USART_VCOM_PERIPHERAL: USART0
+  SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO: 0
+
+  SL_IOSTREAM_USART_VCOM_TX_PORT: gpioPortA
+  SL_IOSTREAM_USART_VCOM_TX_PIN:  8
+
+  SL_IOSTREAM_USART_VCOM_RX_PORT: gpioPortA
+  SL_IOSTREAM_USART_VCOM_RX_PIN:  9
+
+  SL_IOSTREAM_USART_VCOM_CTS_PORT: 0
+  SL_IOSTREAM_USART_VCOM_CTS_PIN:  0
+
+  SL_IOSTREAM_USART_VCOM_RTS_PORT: 0
+  SL_IOSTREAM_USART_VCOM_RTS_PIN:  0
+
+  SL_CLOCK_MANAGER_HFXO_EN: 1
+  SL_CLOCK_MANAGER_HFXO_CTUNE: 140
+  SL_CLOCK_MANAGER_DEFAULT_HF_CLOCK_SOURCE: SL_CLOCK_MANAGER_DEFAULT_HF_CLOCK_SOURCE_HFXO
