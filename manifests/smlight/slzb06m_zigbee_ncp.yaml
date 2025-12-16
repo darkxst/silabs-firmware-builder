@@ -11,9 +11,6 @@ gbl:
   baudrate: 115200
   fw_variant: sw_flow
 
-configuration:
-  SL_ZIGBEE_CHILD_TABLE_SIZE: 32
-
 slcp_defines:
   SL_ZIGBEE_MULTICAST_TABLE_SIZE: 26
   SL_ZIGBEE_ROUTE_TABLE_SIZE: 16

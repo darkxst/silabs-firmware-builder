@@ -2,7 +2,7 @@ name: Seedstudio MG24 Zigbee
 device: EFR32MG24B220F1536IM48
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}_{fw_variant}_{baudrate}"
-sdk: "simplicity_sdk:2024.6.3"
+sdk: "simplicity_sdk:2025.6.2"
 toolchain: "12.2.1.20221205"
 
 gbl:
@@ -13,11 +13,12 @@ gbl:
 
 
 slcp_defines:
-  SL_ZIGBEE_ADDRESS_TABLE_SIZE: 32
   SL_ZIGBEE_MULTICAST_TABLE_SIZE: 26
+  SL_ZIGBEE_ROUTE_TABLE_SIZE: 16
   SL_ZIGBEE_DISCOVERY_TABLE_SIZE: 8
 
 c_defines:
+  SL_ZIGBEE_ADDRESS_TABLE_SIZE: 32
   SL_ZIGBEE_APS_UNICAST_MESSAGE_COUNT: 64
   SL_ZIGBEE_BINDING_TABLE_SIZE: 32
   SL_ZIGBEE_NEIGHBOR_TABLE_SIZE: 26
