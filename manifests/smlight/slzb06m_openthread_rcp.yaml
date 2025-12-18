@@ -11,6 +11,10 @@ gbl:
   baudrate: 460800
   fw_variant: no_flow
 
+add_components:
+- id: iostream_usart
+  instance: [vcom]
+
 
 c_defines:
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 460800

@@ -10,16 +10,11 @@ component:
   - id: ot_stack_rcp
   - id: sl_main
   - id: ot_crash_handler
-  - id: iostream_usart
-    instance:
-      - vcom
-    condition:
-      - device_series_2
   - id: iostream_eusart
     instance:
       - vcom
     condition:
-      - device_series_3
+      - device_has_eusart
   - id: rail_util_pti
   - id: bootloader_interface
   - id: clock_manager
@@ -40,6 +35,9 @@ define:
     value: 6
 
 configuration:
+  - name: SL_MAIN_START_TASK_STACK_SIZE_BYTES
+    value: 2752
+    condition: [sl_main]
   - name: SL_BOARD_ENABLE_VCOM
     value: 1
   # By default, OTBR is configured to work with 460800 baud rate on UART
@@ -79,7 +77,7 @@ configuration:
     value: 4608
   - name: SL_STACK_SIZE
     value: 0x800
-    condition: 
+    condition:
       - kernel
 
 filter:

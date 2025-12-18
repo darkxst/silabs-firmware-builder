@@ -37,5 +37,6 @@ python3 tools/build_project.py \
     --output gbl \
     --output hex \
     --output out \
+    --no-clean-build-dir \
     "${@:2}"
 

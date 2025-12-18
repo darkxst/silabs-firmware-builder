@@ -10,6 +10,10 @@ gbl:
   ot_rcp_version: dynamic
   baudrate: 230400
 
+add_components:
+- id: iostream_usart
+  instance: [vcom]
+
 c_defines:
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 230400
   SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlCtsAndRts

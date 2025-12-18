@@ -11,6 +11,8 @@ gbl:
   baudrate: 460800
 
 add_components:
+- id: iostream_usart
+  instance: [vcom]
 - id: simple_led
   instance: [board_activity]
 
