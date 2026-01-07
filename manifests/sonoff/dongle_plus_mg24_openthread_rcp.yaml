@@ -1,5 +1,5 @@
 name: Dongle Plus MG24 OpenThread RCP
-device: EFR32MG24A020F1024IM40
+device: EFR32MG24A420F1536IM48
 base_project: src/openthread_rcp
 filename: "{manifest_name}_{ot_rcp_version.split('/')[-1]}_gsdk_{sdk_version}_{fw_variant}_{baudrate}"
 sdk: "simplicity_sdk:2024.6.3"

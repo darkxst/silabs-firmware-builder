@@ -1,5 +1,5 @@
 name: Dongle Plus MG24 Zigbee
-device: EFR32MG24A020F1024IM40
+device: EFR32MG24A420F1536IM48
 base_project: src/zigbee_ncp
 filename: "{manifest_name}_{ezsp_version}_{fw_variant}_{baudrate}"
 sdk: "simplicity_sdk:2024.6.3"
