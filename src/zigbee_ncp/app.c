@@ -36,3 +36,14 @@ void sl_zigbee_af_radio_needs_calibrating_cb(void)
 void sl_zigbee_af_main_init_cb(void)
 {
 }
+
+//------------------------------------------------------------------------------
+// Multicast override (XNCP_FEATURE_MEMBER_OF_ALL_GROUPS)
+//------------------------------------------------------------------------------
+
+bool __wrap_sli_zigbee_am_multicast_member(xncp_multicast_id_t multicastId)
+{
+    (void)multicastId;
+    // Ignore all binding and multicast table logic, we want all group packets
+    return true;
+}

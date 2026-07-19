@@ -61,6 +61,10 @@ source:
   - path: main.c
   - path: app.c
 
+toolchain_settings:
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=sli_zigbee_am_multicast_member"
+
 filter:
   - name: Wireless Technology
     value: [Zigbee]
