@@ -11,6 +11,7 @@ RUN \
        git-lfs \
        jq \
        yq \
+       libdbus-1-3 \
        libgl1 \
        libglib2.0-0 \
        locales \
